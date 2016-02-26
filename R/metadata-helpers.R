@@ -3,7 +3,6 @@
 ### -------------------------------------------------------------------------
 ###
 
-## TODO: sapply(as.character(row), strsplit, ",", ",", fixed=TRUE)
 readMetadataFromCsv <- function(pathToPackage) 
 {
     mat <- rbind(c("Title", "character"),
@@ -57,13 +56,17 @@ readMetadataFromCsv <- function(pathToPackage)
 makeExperimentHubMetadata <- function(pathToPackage) 
 {
     meta <- readMetadataFromCsv(pathToPackage)
+    description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
+    bcv <- unlist(strsplit(description[, "biocViews"], ",", fixed=TRUE),
+                  use.names=FALSE)
     apply(meta, 1, 
         function(xx) {
+        browser()
             ## BiocVersion and Tags can be comma separated
             xx["BiocVersion"] <- 
                 strsplit(as.character(xx["BiocVersion"]), ",", fixed=TRUE)
-            xx["Tags"] <- 
-                strsplit(as.character(xx["Tags"]), ",", fixed=TRUE)
+            tags <- unlist(strsplit(as.character(xx["Tags"]), ",", fixed=TRUE)) 
+            xx["Tags"] <- list(c(tags, bcv))
             with(xx, 
                  ExperimentHubMetadata(Title=Title, Description=Description, 
                                        BiocVersion=BiocVersion, Genome=Genome, 

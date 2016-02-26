@@ -9,21 +9,12 @@
 }
 
 \usage{
-addResources(pathToPackage, metadataOnly = TRUE, insert = FALSE, ...)
+addResources(pathToPackage, insert = FALSE, ...)
 }
 
 \arguments{
   \item{pathToPackage}{
     Local path to data package; no trailing slash.
-  }
-  \item{metadataOnly}{
-    A \code{logical} to specify the processing of metadata only or both
-    metadata and data files.
-
-    When FALSE, metadata are generated and data files are downloaded,
-    processed and pushed to their final location in S3 buckets. 
-    \code{metadata = TRUE} produces only metadata and is useful for 
-    testing.
   }
   \item{insert}{
     A \code{logical} to control if metadata are inserted in the ExperimentHub
@@ -42,26 +33,8 @@ addResources(pathToPackage, metadataOnly = TRUE, insert = FALSE, ...)
   }
 }
 
-\details{
-   \itemize{
-     \item addResources: 
-
-           \code{addResources} is responsible for creating and inserting
-           metadata records as well as pushing data files to AWS S3 buckets.
- 
-           By manipulating the \code{metadataOnly} and \code{insert}
-           arguments the insertion of metadata can be decoupled from the pushing
-           of data files to S3. This is useful for testing or performing a
-           single step vs both.
-
-      \item global options: 
-
-            TODO:
-  }
-}
-
 \value{
-  A list of \code{ExperimentHubMetadata} objects.
+  A list of \link{ExperimentHubMetadata} objects.
 }
 
 \seealso{

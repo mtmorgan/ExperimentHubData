@@ -17,54 +17,69 @@
 
 \arguments{
   \item{pathToPackage}{
-    character string giving the full path to metadata.csv
+    full path to package
   }
 }
 
 \details{
-  These functions are used by \code{addResources} to read the metadta.csv file
-  located in inst/extdata/ of a contributed package.  metadata.csv contains
-  information about the \code{ExperimentHub} resource(s) where the rows
-  correspond to individual resources (i.e., data objects) and columns to the
-  metadata fields. Required fields are described below and should all be single
-  character strings of length 1. \code{BiocVersion} and \code{Tags} can have
-  multiple comma-separated values within the string.
-
-  Required fields in metadata.csv:
   \itemize{
-    \item Title: \code{character}. Name of the resource.
+    \item{makeExperimentHubMetadata:}{
+      Called by \code{addResources}. This function reads in the metadata.csv 
+      file of a contributed package and creates a \link{ExperimentHubMetadata}
+      object to be inserted in the ExperimentHub database.
+    }
+    \item{readMetadataFromCsv:}{
+      Called by \code{makeExperimentHubMetadata}. This function reads in
+      the metadata.csv file located in inst/extdata of the 
+      \code{pathToPackage}. It performs checks for required columns and 
+      data types and can be used by package authors to validate their 
+      metadata.csv.
 
-    \item Description: \code{character}. Brief description of the resource,
-          similar to the 'Description' field in a package DESCRIPTION file.
+      The rows of metadata.csv represent individual \code{ExperimentHub}
+      resources (i.e., data objects) and the columns are the metadata
+      fields. All fields should be a single character string of length 1.
+      \code{BiocVersion} and \code{Tags} can have multiple comma-separated
+      values within the string.
 
-    \item BiocVersion: \code{character}. All Bioconductor versions
-          the resource should be made available for; comma separated.
+      Required fields in metadata.csv:
+      \itemize{
+        \item Title: \code{character}. Name of the resource.
 
-    \item Genome: \code{character}. Genome.
+        \item Description: \code{character}. Brief description of the resource,
+              similar to the 'Description' field in a package DESCRIPTION file.
 
-    \item SourceType: \code{character}. Format of original data, e.g., FASTA,
-          BAM, BigWig, etc.
+        \item BiocVersion: \code{character}. All Bioconductor versions
+              the resource should be made available for; comma separated.
 
-    \item SourceUrl: \code{character}. Location of original data.
+        \item Genome: \code{character}. Genome.
 
-    \item SourceVersion: \code{character}. Version of original data.
+        \item SourceType: \code{character}. Format of original data, e.g., FASTA,
+              BAM, BigWig, etc.
 
-    \item Species: \code{character}. Species.
+        \item SourceUrl: \code{character}. Location of original data.
 
-    \item TaxonomyId: \code{character(1)}. Taxonomy ID.
+        \item SourceVersion: \code{character}. Version of original data.
 
-    \item Coordinate_1_based: \code{logical}. TRUE if data are 1-based.
+        \item Species: \code{character}. Species.
 
-    \item DataProvider: \code{character}. Name of original data provider. 
+        \item TaxonomyId: \code{character(1)}. Taxonomy ID.
 
-    \item Maintainer: \code{character}. Maintainer name and email in the
-      following format: Maintainer Name <username@address>.
+        \item Coordinate_1_based: \code{logical}. TRUE if data are 1-based.
 
-    \item RDataClass: \code{character}. R / Bioconductor class the data
-      are stored in.
+        \item DataProvider: \code{character}. Name of original data provider. 
 
-    \item Tags: \code{character}. Terms for search.
-      TODO: restrict to BiocViews?
+        \item Maintainer: \code{character}. Maintainer name and email in the
+          following format: Maintainer Name <username@address>.
+
+        \item RDataClass: \code{character}. R / Bioconductor class the data
+          are stored in.
+
+        \item Tags: \code{character}. Free-form search terms to be used with
+          \code{query} on an ExperimentHub object. The \code{biocViews} terms
+          from the package DESCRIPTION are added to the Tag field when
+          adding metadata to the database.
+      }
+    }
   }
 }
 
@@ -82,7 +97,7 @@
 }
 
 \examples{
-  ## TODO
+## TODO
 }
 
 \keyword{methods}
