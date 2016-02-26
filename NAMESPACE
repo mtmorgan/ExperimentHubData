@@ -1,0 +1,18 @@
+import(methods)
+import(BiocGenerics)
+import(S4Vectors)
+import(httr)
+import(AnnotationHub)
+import(AnnotationHubData)
+
+importFrom(BiocInstaller, biocVersion)
+
+importFrom(curl, new_handle, curl, handle_setopt)
+
+exportClasses(ExperimentHubMetadata) 
+
+export(
+  ExperimentHubMetadata,
+  readMetadataFromCsv, makeExperimentHubMetadata,
+  addResources
+)
