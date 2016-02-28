@@ -124,10 +124,10 @@ ExperimentHubMetadata(ExperimentHubRoot=NA_character_,
       \code{character()} Notes about the resource.
     }
     \item{DispatchClass}{
-      \code{character(1){Used internally.
+      \code{character(1)} Used internally.
     }
     \item{PreparerClass}{
-      \code{character(1){Used internally.
+      \code{character(1)} Used internally.
     }
 }
 

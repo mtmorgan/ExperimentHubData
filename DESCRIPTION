@@ -1,7 +1,7 @@
 Package: ExperimentHubData
 Type: Package
 Title: Add resources to ExperimentHub
-Version: 0.99.10
+Version: 0.99.11
 Authors@R: 
     c(person("Bioconductor", "Maintainer", 
              email="maintainer@bioconductor.org", role="cre"))
