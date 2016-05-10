@@ -64,7 +64,7 @@ makeExperimentHubMetadata <- function(pathToPackage)
     #    stop("please fix biocViews")
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
     Tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
-    lapply(seq_along(meta),
+    lapply(seq_len(nrow(meta)),
         function(x) {
             with(meta[x,], 
                  ExperimentHubMetadata(Title=Title, Description=Description, 
