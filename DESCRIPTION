@@ -1,7 +1,7 @@
 Package: ExperimentHubData
 Type: Package
 Title: Add resources to ExperimentHub
-Version: 0.101.0
+Version: 0.101.1
 Authors@R: 
     c(person("Bioconductor", "Maintainer", 
              email="maintainer@bioconductor.org", role="cre"))
@@ -10,9 +10,9 @@ Maintainer: Bioconductor Package Maintainer <maintainer@bioconductor.org>
 Description: Functions to add metadata to ExperimentHub db and
     resource files to AWS S3 buckets.
 License: Artistic-2.0
-Depends: BiocGenerics (>= 0.15.10), S4Vectors, AnnotationHubData (>= 1.1.4),
-    AnnotationHub
-Imports: methods, BiocInstaller, httr, curl
+Depends: utils, BiocGenerics (>= 0.15.10), S4Vectors, 
+    AnnotationHubData (>= 1.1.4), AnnotationHub
+Imports: methods, BiocInstaller, BiocCheck, httr, curl
 Suggests: GenomeInfoDb, RUnit, knitr, BiocStyle
 biocViews: Infrastructure, DataImport, GUI, ThirdPartyClient
 VignetteBuilder: knitr

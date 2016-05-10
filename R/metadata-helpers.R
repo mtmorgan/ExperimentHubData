@@ -5,6 +5,9 @@
 
 readMetadataFromCsv <- function(pathToPackage) 
 {
+    meta <- read.csv(file.path(pathToPackage, "inst/extdata/metadata.csv"),
+                     colClasses="character", stringsAsFactors=FALSE)
+    ## Check columns
     mat <- rbind(c("Title", "character"),
                  c("Description", "character"),
                  c("BiocVersion", "character"),
@@ -18,14 +21,8 @@ readMetadataFromCsv <- function(pathToPackage)
                  c("DataProvider", "character"),
                  c("Maintainer", "character"),
                  c("RDataClass", "character"),
-                 c("DispatchClass", "character"),
-                 c("Tags", "character"),
-                 c("ResourceName", "character"))
-    meta <- read.csv(file.path(pathToPackage, "inst/extdata/metadata.csv"),
-                     col.names=mat[,1], colClasses=mat[,2],
-                     stringsAsFactors=FALSE)
+                 c("DispatchClass", "character"))
 
-    ## Rogue columns
     expected <- mat[,1]
     missing <- !expected %in% names(meta)
     if (any(missing))
@@ -36,7 +33,7 @@ readMetadataFromCsv <- function(pathToPackage)
         warning(paste0("invalid fields in metadata.csv will be ignored: ", 
                     paste(names(meta)[invalid], collapse=", ")))
 
-    ## All fields must be length 1
+    ## All fields length 1
     apply(meta, 1, 
         function(xx) {
             valid <- sapply(xx, function(field) length(field) == 1L)
@@ -46,9 +43,14 @@ readMetadataFromCsv <- function(pathToPackage)
         }
     )
 
+    ## Enforce non-character data type
+    meta$TaxonomyId <- as.integer(meta$TaxonomyId)
+    meta$Coordinate_1_based <- as.logical(meta$Coordinate_1_based)
+
+    ## Real time assignments
     meta$RDataDateAdded <- rep(Sys.time(), nrow(meta))
     package <- basename(pathToPackage)
-    meta$RDataPath <- paste0(package,"/",meta$ResourceName)
+    meta$RDataPath <- paste0(package,"/",meta$Title)
     meta$PreparerClass <- package 
     meta
 }
@@ -56,18 +58,15 @@ readMetadataFromCsv <- function(pathToPackage)
 makeExperimentHubMetadata <- function(pathToPackage) 
 {
     meta <- readMetadataFromCsv(pathToPackage)
+
+    ## FIXME:
+    #if (BiocCheck:::checkBiocViews(pathToPackage))
+    #    stop("please fix biocViews")
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
-    bcv <- unlist(strsplit(description[, "biocViews"], ",", fixed=TRUE),
-                  use.names=FALSE)
-    apply(meta, 1, 
-        function(xx) {
-        browser()
-            ## BiocVersion and Tags can be comma separated
-            xx["BiocVersion"] <- 
-                strsplit(as.character(xx["BiocVersion"]), ",", fixed=TRUE)
-            tags <- unlist(strsplit(as.character(xx["Tags"]), ",", fixed=TRUE)) 
-            xx["Tags"] <- list(c(tags, bcv))
-            with(xx, 
+    Tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
+    lapply(seq_along(meta),
+        function(x) {
+            with(meta[x,], 
                  ExperimentHubMetadata(Title=Title, Description=Description, 
                                        BiocVersion=BiocVersion, Genome=Genome, 
                                        SourceType=SourceType, 

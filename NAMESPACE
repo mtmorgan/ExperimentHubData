@@ -1,9 +1,11 @@
 import(methods)
+import(utils)
 import(BiocGenerics)
 import(S4Vectors)
 import(httr)
 import(AnnotationHub)
 import(AnnotationHubData)
+import(BiocCheck) ## non-exported checkBiocViews()
 
 importFrom(BiocInstaller, biocVersion)
 

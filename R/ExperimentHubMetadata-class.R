@@ -20,7 +20,7 @@ setClass("ExperimentHubMetadata",
 ExperimentHubMetadata <-
     function(ExperimentHubRoot=NA_character_, 
         BiocVersion=biocVersion(),
-        SourceUrl=NA_character_, 
+        SourceUrl=NA_character_,   ## not necessary because no downloads
         SourceType=NA_character_, 
         SourceVersion=NA_character_, 
         SourceLastModifiedDate=as.POSIXct(NA_character_), 
@@ -57,8 +57,9 @@ ExperimentHubMetadata <-
         stop(paste0("ExperimentHubMetdata objects can contain",
                     " only one taxonomy ID or NA"))
 
-    if(any(is.na(SourceUrl)))
-        stop(paste0("ExperimentHubMetdata SourceUrl slot cannot contain NAs"))
+    ## FIXME: do we need to handle the case of multiple files per resource?
+    if(any(is.na(RDataPath)))
+        stop(paste0("ExperimentHubMetdata RDataPath slot cannot contain NAs"))
 
     if (missing(RDataPath)) { 
         ## Add two characters: one for substr starting AT clipChars
@@ -71,11 +72,12 @@ ExperimentHubMetadata <-
         as.POSIXct(strsplit(
             as.character(RDataDateAdded), " ")[[1]][1], tz="GMT")
 
-    lapply(c(SourceType, Location_Prefix, RDataClass),
+    lapply(c(Location_Prefix, RDataClass),
         AnnotationHubData:::.checkThatSingleStringAndNoCommas) 
-    lapply(c(Genome, Species), 
+    lapply(c(Genome, Species, SourceType), 
         AnnotationHubData:::.checkThatSingleStringOrNA)
-    AnnotationHubData:::.checkThatSingleStringOrNAAndNoCommas(SourceVersion)
+    lapply(SourceVersion,
+        AnnotationHubData:::.checkThatSingleStringOrNAAndNoCommas)
 
     new("ExperimentHubMetadata",
         ExperimentHubRoot=ExperimentHubRoot,

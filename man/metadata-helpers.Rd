@@ -38,8 +38,6 @@
       The rows of metadata.csv represent individual \code{ExperimentHub}
       resources (i.e., data objects) and the columns are the metadata
       fields. All fields should be a single character string of length 1.
-      \code{BiocVersion} and \code{Tags} can have multiple comma-separated
-      values within the string.
 
       Required fields in metadata.csv:
       \itemize{
@@ -48,15 +46,18 @@
         \item Description: \code{character}. Brief description of the resource,
               similar to the 'Description' field in a package DESCRIPTION file.
 
-        \item BiocVersion: \code{character}. All Bioconductor versions
-              the resource should be made available for; comma separated.
+        \item BiocVersion: \code{character}. The first Bioconductor version
+              the resource was made available for. Unless removed from
+              the hub, the resource will be available for all versions 
+              greater than or equal to this field.
 
         \item Genome: \code{character}. Genome.
 
         \item SourceType: \code{character}. Format of original data, e.g., FASTA,
               BAM, BigWig, etc.
 
-        \item SourceUrl: \code{character}. Location of original data.
+        \item SourceUrl: \code{character}. Optional location of original
+              data files.
 
         \item SourceVersion: \code{character}. Version of original data.
 
@@ -69,16 +70,16 @@
         \item DataProvider: \code{character}. Name of original data provider. 
 
         \item Maintainer: \code{character}. Maintainer name and email in the
-          following format: Maintainer Name <username@address>.
+              following format: Maintainer Name <username@address>.
 
         \item RDataClass: \code{character}. R / Bioconductor class the data
-          are stored in.
-
-        \item Tags: \code{character}. Free-form search terms to be used with
-          \code{query} on an ExperimentHub object. The \code{biocViews} terms
-          from the package DESCRIPTION are added to the Tag field when
-          adding metadata to the database.
+              are stored in.
       }
+
+      Note there is no \sQuote{Tags} field in metadata.csv. The metadata
+      \sQuote{Tags} are taken from the \sQuote{biocViews} field in the
+      package DESCRIPTION. \sQuote{Tags} are used as search terms and must 
+      be valid ExperimentalData biocViews.
     }
   }
 }
