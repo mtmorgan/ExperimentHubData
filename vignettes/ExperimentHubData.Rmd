@@ -37,31 +37,38 @@ for more information.
 
 ### Software package
 
-When a resource is downloaded from `ExperimentHub` the associated software 
-package is loaded so the man pages and vignettes are readily available.
-Documentation plays an important role in understanding these curated resources. 
-Clear man pages and a detailed vignette are essential to provide the necessary
-background to ensure the resources are used appropriately.
+When a resource is downloaded from `ExperimentHub` the associated software
+package is loaded in the workspace making the man pages and vignettes readily
+available. Because documentation plays an important role in understanding these
+curated resources please take the time to develop clear man pages and a
+detailed vignette. These documents provide essential background to the user and
+guide appropriate use the of resources.
 
-Package organization:
-
-* inst/scripts/
-    - make-data.R
-
-    Script demonstrating the steps involved in making the data object. Add
-    a brief description and/or reference for steps not performed in `R`.
-
-    - make-metadata.R
-
-    Script to make metadata.csv. See ?`readMetadataFromCsv` for
-    a description of expected fields and data types.  `readMetadataFromCsv()`
-    can be used to validate metadata.csv before submitting the package.
+Below is an outline of package organization. The files listed are required
+unless otherwise stated.
 
 * inst/extadata/
     - metadata.csv
 
-    csv file with columns and data types as specified in 
-    `ExperimentHubData::readMetadataFromCsv()`.
+    This file contains the metadata for each resource to be added to
+    `ExperimentHub`. The required column names and data types are specified in 
+    the `ExperimentHubData::readMetadataFromCsv()` function. See 
+    ?`readMetadataFromCsv` for details.
+
+* inst/scripts/
+    - make-data.R
+
+    Script describing the steps involved in making the data object(s). This
+    includes where the data were downloaded from, how they were processed
+    and how the final R object was made. Include a description of any
+    processing steps performed outside of `R` with third party software.
+
+    - make-metadata.R
+
+    Script to make the metadata.csv file located in inst/extdata of the 
+    package. See ?`readMetadataFromCsv` for a description of expected fields 
+    and data types.  `readMetadataFromCsv()` can be used to validate the 
+    metadata.csv file before submitting the package.
 
 * vignettes/
     - One or more vignettes describing analysis workflows. 
@@ -85,9 +92,6 @@ using AWS command line interface (CLI), e.g.,
 
     $ aws --profile username s3 cp dataobject s3://experimenthub/packagename --acl public-read
 
-A script for creating the data objects named 'make-data.R' should be 
-included in inst/scripts. Processing steps done with third party software 
-should be described and appropriate references included.
 
 ## Modify existing resources
 
