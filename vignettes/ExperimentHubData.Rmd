@@ -20,22 +20,19 @@ objects such as GRanges, SummarizedExperiment, data.frame etc.  Each resource
 has associated metadata that can be searched through the `ExperimentHub` client interface.
 
 
-# Resources
-
-## Add new resources 
+# Adding new resources
 
 Resources are contributed to `ExperimentHub` in the form of a package.  The
 package contains the resource metadata, man pages, vignette and any supporting
 `R` functions the author wants to provide.  This is a similar design to the
 existing `Bioconductor` experimental data packages except the data are
-uploaded to AWS S3 buckets instead of stored in the data/ directory of the
-package.
+stored in AWS S3 buckets instead of the data/ directory of the package.
 
 New packages should be submitted to the `Bioconductor` tracker and will
 go through the usual package review process. Contact packages@bioconductor.org 
 for more information.
 
-### Software package
+## Software package
 
 When a resource is downloaded from `ExperimentHub` the associated software
 package is loaded in the workspace making the man pages and vignettes readily
@@ -45,27 +42,30 @@ detailed vignette. These documents provide essential background to the user and
 guide appropriate use the of resources.
 
 Below is an outline of package organization. The files listed are required
-unless otherwise stated.
+unless otherwise stated. 
 
 * inst/extadata/
     - metadata.csv
 
-    This file contains the metadata for each resource to be added to
-    `ExperimentHub`. The required column names and data types are specified in 
-    the `ExperimentHubData::readMetadataFromCsv()` function. See 
-    ?`readMetadataFromCsv` for details.
+    This file contains the metadata in the format of one row per resource
+    to be added to the `ExperimentHub` database. The file should be generated
+    from the code in inst/scripts/make-metadata.R where the final data are
+    written out with write.csv(..., row.names=FALSE). The required column 
+    names and data types are specified in 
+    `ExperimentHubData::readMetadataFromCsv()`. See ?`readMetadataFromCsv` for 
+    details.
 
 * inst/scripts/
     - make-data.R
 
-    Script describing the steps involved in making the data object(s). This
-    includes where the data were downloaded from, how they were processed
+    A script describing the steps involved in making the data object(s). This
+    includes where the original data were downloaded from, pre-processing,
     and how the final R object was made. Include a description of any
-    processing steps performed outside of `R` with third party software.
+    steps performed outside of `R` with third party software.
 
     - make-metadata.R
 
-    Script to make the metadata.csv file located in inst/extdata of the 
+    A script to make the metadata.csv file located in inst/extdata of the 
     package. See ?`readMetadataFromCsv` for a description of expected fields 
     and data types.  `readMetadataFromCsv()` can be used to validate the 
     metadata.csv file before submitting the package.
@@ -77,13 +77,26 @@ unless otherwise stated.
     - package man page 
  
     The package man page serves as a landing point and should briefly describe
-    all resources associated with the package. It is recommended (but not
-    required) that each resource have a dedicated man page.
+    all resources associated with the package. 
+ 
+    - individual resource man pages
+ 
+    It is recommended (but not required) that each resource have a dedicated 
+    man page.
 
 * R/
     - optional functions
 
-### Data objects
+* DESCRIPTION / NAMESPACE
+
+  The package should depend on and fully import ExperimentHub.
+  Package authors are encouraged to use the ExperimentHub::listResources() and 
+  ExperimentHub::loadResource() functions in their man pages and vignette.
+  These helpers are designed to facilitate data discovery within a specific
+  package vs within all of ExperimentHub.
+
+
+## Data objects
 
 Data are not formally part of the software package and are uploaded separately
 to AWS S3. When a package is submitted for review the author is 
@@ -93,65 +106,51 @@ using AWS command line interface (CLI), e.g.,
     $ aws --profile username s3 cp dataobject s3://experimenthub/packagename --acl public-read
 
 
-## Modify existing resources
+# Adding new resources to an existing package
 
-Existing resources may need updating because of a bug fix or because the
-original data have been re-processed with updated software. There are two parts
-to each resource and they can be updated together or separately: the metadata 
-in the `ExperimentHub` database and the data object in the AWS S3 bucket.
+Adding new resources to an existing package requires the following steps:
 
-### Metadata only
+    * upload new data to S3 bucket
 
-Package maintainer:
+    * update make-metadata.R with new resource metadata
 
-    * update metadata.csv with modified information; the 'version' field for the
-      resource stays the same
+    * re-generate metadata.csv
 
-    * bump the package version
+    * bump package version and commit to svn/git
 
-    * commit the new package version to svn/git
+Contact maintainer@bioconductor.org with any questions.
 
-ExperimentHub client side:
+# Bug fixes 
 
-    * when an EH package version is bumped the ExperimentHub
-      maintainer is notified
+A bug fix may involve a change to the metadata, data resource or both. A change
+to the data in S3 can be done by the package author but a change to the
+metadata in the database must be done by someone on the Bioconductor Core team.
 
-    * ExperimentHub maintainer modifies metadata in database
+## Update resource 
 
-    * ExperimentHub() downloads new metadata based on database timestamp
+    * upload new file to S3 bucket to which you have permissions; the new
+      file must have the same name as the original
 
-    * previously downloaded resources are not a problem (have not changed)
+## Update metadata
 
-### Metadata and data objects 
+    * notify maintainer@bioconductor.org that you need to commit a metadata
+      change
 
-Package maintainer:
+    * update make-metadata.R with modified information
 
-    * update metadata.csv with modified information; the 'version' field for the
-      resource is bumped 
+    * regenerate metadata.csv
 
-    * bump the package version
+    * bump the package version and commit to svn/git
 
-    * commit the new package version to svn/git
- 
-    * upload new resource to S3
+# Remove resources
 
-ExperimentHub client side:
+When a resource is removed from ExperimentHub the 'status' field in the 
+metadata is modified to explain why they are no longer available. Once
+this status is changed the ExperimentHub() constructor will not list the 
+resource among the available ids. An attempt to extract the resource with 
+'[[' and the EH id will return an error along with the status message.
 
-    * when an EH package version is bumped the ExperimentHub
-      maintainer is notified
-
-    * ExperimentHub maintainer adds new metadata to database
-
-    * ExperimentHub() downloads new metadata based on database timestamp
-
-    * previously downloaded resources have separate 'EH' ids from the new
-      versions and are not a problem
-
-
-## Remove old resources
-
-TBD
-
+To remove a resource from ExperimentHub contact maintainer@bioconductor.org.
 
 # `ExperimentHub_docker`
 
