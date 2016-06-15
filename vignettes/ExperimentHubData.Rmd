@@ -110,13 +110,13 @@ using AWS command line interface (CLI), e.g.,
 
 Adding new resources to an existing package requires the following steps:
 
-    * upload new data to S3 bucket
+* upload new data to S3 bucket
 
-    * update make-metadata.R with new resource metadata
+* update make-metadata.R with new resource metadata
 
-    * re-generate metadata.csv
+* re-generate metadata.csv
 
-    * bump package version and commit to svn/git
+* bump package version and commit to svn/git
 
 Contact maintainer@bioconductor.org with any questions.
 
@@ -128,19 +128,19 @@ metadata in the database must be done by someone on the Bioconductor Core team.
 
 ## Update resource 
 
-    * upload new file to S3 bucket to which you have permissions; the new
-      file must have the same name as the original
+* upload new file to S3 bucket to which you have permissions; the new
+  file must have the same name as the original
 
 ## Update metadata
 
-    * notify maintainer@bioconductor.org that you need to commit a metadata
-      change
+* notify maintainer@bioconductor.org that you need to commit a metadata
+  change
 
-    * update make-metadata.R with modified information
+* update make-metadata.R with modified information
 
-    * regenerate metadata.csv
+* regenerate metadata.csv
 
-    * bump the package version and commit to svn/git
+* bump the package version and commit to svn/git
 
 # Remove resources
 
