@@ -19,8 +19,7 @@ publications or experiments.  The resources are generally not files of raw data
 objects such as GRanges, SummarizedExperiment, data.frame etc.  Each resource 
 has associated metadata that can be searched through the `ExperimentHub` client interface.
 
-
-# Adding new resources
+# Submit new resources
 
 Resources are contributed to `ExperimentHub` in the form of a package.  The
 package contains the resource metadata, man pages, vignette and any supporting
@@ -88,7 +87,6 @@ unless otherwise stated.
     - optional functions
 
 * DESCRIPTION / NAMESPACE
-
   The package should depend on and fully import ExperimentHub.
   Package authors are encouraged to use the ExperimentHub::listResources() and 
   ExperimentHub::loadResource() functions in their man pages and vignette.
@@ -99,22 +97,25 @@ unless otherwise stated.
 ## Data objects
 
 Data are not formally part of the software package and are uploaded separately
-to AWS S3. When a package is submitted for review the author is 
-given access to an S3 bucket and is responsible for uploading the resource(s) 
-using AWS command line interface (CLI), e.g.,
+to AWS S3. When a package is submitted for review a new AWS S3 bucket is
+created with the same name as the package. The author is given access to the
+bucket and is responsible for uploading the resource(s) using AWS command line
+interface (CLI), e.g.,
 
     $ aws --profile username s3 cp dataobject s3://experimenthub/packagename --acl public-read
 
 
-# Adding new resources to an existing package
+# Add additional resources
 
-Adding new resources to an existing package requires the following steps:
+Multiple versions of the data can be added to the same package as they
+become available. Be sure the title is descriptive and reflects the
+distinguishing information such as genome build Adding more resources of the same typeto an existing package requires the following steps:
 
-* upload new data to S3 bucket
+* upload the new data to the same S3 bucket
 
-* update make-metadata.R with new resource metadata
+* update make-metadata.R with the new metadata information
 
-* re-generate metadata.csv
+* re-generate the metadata.csv file
 
 * bump package version and commit to svn/git
 
@@ -126,12 +127,12 @@ A bug fix may involve a change to the metadata, data resource or both. A change
 to the data in S3 can be done by the package author but a change to the
 metadata in the database must be done by someone on the Bioconductor Core team.
 
-## Update resource 
+## Update the resource 
 
-* upload new file to S3 bucket to which you have permissions; the new
-  file must have the same name as the original
+* upload the new file to the same S3 bucket; the new file must have the same 
+  name as the original
 
-## Update metadata
+## Update the metadata
 
 * notify maintainer@bioconductor.org that you need to commit a metadata
   change
@@ -163,4 +164,4 @@ set up the Docker and inserting records is done with
 In general this level of testing should not be necessary when submitting
 a package with new resources. The best way to validate record metadata is to 
 read inst/extdata/metadata.csv with `ExperimentHubData::readMetadataFromCsv()`.
-If that is successful the metadata is ready to go.
+If that is successful the metadata are ready to go.
