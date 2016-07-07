@@ -44,8 +44,7 @@ Below is an outline of package organization. The files listed are required
 unless otherwise stated. 
 
 * inst/extadata/
-    - metadata.csv
-
+    - metadata.csv: 
     This file contains the metadata in the format of one row per resource
     to be added to the `ExperimentHub` database. The file should be generated
     from the code in inst/scripts/make-metadata.R where the final data are
@@ -55,43 +54,43 @@ unless otherwise stated.
     details.
 
 * inst/scripts/
-    - make-data.R
-
+    - make-data.R: 
     A script describing the steps involved in making the data object(s). This
     includes where the original data were downloaded from, pre-processing,
     and how the final R object was made. Include a description of any
     steps performed outside of `R` with third party software.
 
-    - make-metadata.R
-
+    - make-metadata.R: 
     A script to make the metadata.csv file located in inst/extdata of the 
     package. See ?`readMetadataFromCsv` for a description of expected fields 
     and data types.  `readMetadataFromCsv()` can be used to validate the 
     metadata.csv file before submitting the package.
 
 * vignettes/
-    - One or more vignettes describing analysis workflows. 
+
+    One or more vignettes describing analysis workflows. 
 
 * man/
-    - package man page 
- 
+
+    package man page: 
     The package man page serves as a landing point and should briefly describe
     all resources associated with the package. 
  
-    - individual resource man pages
- 
+    resource man pages: 
     It is recommended (but not required) that each resource have a dedicated 
     man page.
 
 * R/
-    - optional functions
+
+    Optional functions to enhance data exploration.
 
 * DESCRIPTION / NAMESPACE
-  The package should depend on and fully import ExperimentHub.
-  Package authors are encouraged to use the ExperimentHub::listResources() and 
-  ExperimentHub::loadResource() functions in their man pages and vignette.
-  These helpers are designed to facilitate data discovery within a specific
-  package vs within all of ExperimentHub.
+
+    The package should depend on and fully import ExperimentHub.
+    Package authors are encouraged to use the ExperimentHub::listResources() and 
+    ExperimentHub::loadResource() functions in their man pages and vignette.
+    These helpers are designed to facilitate data discovery within a specific
+    package vs within all of ExperimentHub.
 
 
 ## Data objects
