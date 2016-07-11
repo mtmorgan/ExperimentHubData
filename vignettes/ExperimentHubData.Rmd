@@ -97,13 +97,9 @@ unless otherwise stated.
 
 Data are not formally part of the software package and are uploaded separately
 to AWS S3. When a package is submitted for review a new AWS S3 bucket is
-created with the same name as the package. The author will be given access to 
-the bucket; confirm access and username by writing to 
-maintainer@bioconductor.org. To upload data you need an active
-AWS account and need to install the command line interface (AWS CLI) tool.
-Upload the data using this command:
-
-    $ aws --profile username s3 cp dataobject s3://experimenthub/packagename --acl public-read
+created with the same name as the package. The author will make the data
+available via dropbox, ftp or another mutually accessible application.
+Resources will be uploaded to S3 by a member of the Bioconductor Core team.
 
 
 # Add additional resources
@@ -112,7 +108,8 @@ Multiple versions of the data can be added to the same package as they
 become available. Be sure the title is descriptive and reflects the
 distinguishing information such as genome build Adding more resources of the same typeto an existing package requires the following steps:
 
-* upload the new data to the same S3 bucket
+* make data available via dropbox, ftp, etc. and notify 
+  maintainer@bioconductor.org
 
 * update make-metadata.R with the new metadata information
 
@@ -124,19 +121,18 @@ Contact maintainer@bioconductor.org with any questions.
 
 # Bug fixes 
 
-A bug fix may involve a change to the metadata, data resource or both. A change
-to the data in S3 can be done by the package author but a change to the
-metadata in the database must be done by someone on the Bioconductor Core team.
+A bug fix may involve a change to the metadata, data resource or both.
 
 ## Update the resource 
 
-* upload the new file to the same S3 bucket; the new file must have the same 
-  name as the original
+* the replacement resource must have the same name as the original
+
+* notify maintainer@bioconductor.org that you want to replace the data
+  and make the files available via dropbox, ftp, etc. 
 
 ## Update the metadata
 
-* notify maintainer@bioconductor.org that you need to commit a metadata
-  change
+* notify maintainer@bioconductor.org that you want to change the metadata
 
 * update make-metadata.R with modified information
 
