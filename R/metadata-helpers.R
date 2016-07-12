@@ -21,9 +21,12 @@ readMetadataFromCsv <- function(pathToPackage)
                  c("DataProvider", "character"),
                  c("Maintainer", "character"),
                  c("RDataClass", "character"),
-                 c("DispatchClass", "character"))
+                 c("DispatchClass", "character"),
+                 c("ResourceName", "character"))
 
     expected <- mat[,1]
+    if (!"DispatchClass" %in% names(meta))
+        DispatchClass <- RDataClass
     missing <- !expected %in% names(meta)
     if (any(missing))
         stop(paste0("missing fields in metadata.csv: ", 
@@ -50,7 +53,7 @@ readMetadataFromCsv <- function(pathToPackage)
     ## Real time assignments
     meta$RDataDateAdded <- rep(Sys.time(), nrow(meta))
     package <- basename(pathToPackage)
-    meta$RDataPath <- paste0(package,"/",meta$Title)
+    meta$RDataPath <- paste0(package,"/",meta$ResourceName)
     meta$PreparerClass <- package 
     meta
 }

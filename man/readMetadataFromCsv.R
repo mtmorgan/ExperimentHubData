@@ -35,7 +35,9 @@
 
       Required fields in metadata.csv:
       \itemize{
-        \item Title: \code{character}. Name of the resource.
+        \item Title: \code{character}. Name of the resource. This can be
+              the exact file name (if self-describing) or a more complete
+              description.
 
         \item Description: \code{character}. Brief description of the resource,
               similar to the 'Description' field in a package DESCRIPTION file.
@@ -68,6 +70,14 @@
 
         \item RDataClass: \code{character}. R / Bioconductor class the data
               are stored in.
+
+        \item DispatchClass: \code{character}. Optional specification of
+              DispatchClass used by ExperimentHub to load the resource.
+              Usually the same as \code{RDataClass}. No need to specify
+              this column unless asked to do so by maintainer@bioconductor.org.
+
+        \item ResourceName: \code{character}. Exact file names with Rda
+              extension.
       }
 
       Note there is no \sQuote{Tags} field in metadata.csv. The metadata
@@ -112,8 +122,7 @@ meta <- data.frame(
     DataProvider = "GEO",
     Maintainer = "Your Name <youremail@provider.com>",
     RDataClass = "SummarizedExperiment",
-    DispatchClass = "SummarizedExperiment",
-    ResourceName = "DescriptiveName.Rda")
+    ResourceName = "FileName.Rda")
 )
 
 ## Write the data out as 'metadata.csv' and put in the inst/extdata 
