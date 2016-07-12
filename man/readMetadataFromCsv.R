@@ -1,17 +1,16 @@
-\name{makeMetadataFromCsv}
+\name{readMetadataFromCsv}
 
-\alias{makeExperimentHubMetadata}
 \alias{readMetadataFromCsv}
-\alias{metadata}
 
-\title{Metadata File Helpers}
+\title{
+  Read metadata file for ExperimentHub resources into a data.frame
+}
 
 \description{
-  Read metadata file for an ExperimentHub resource into R 
+  Read metadata file for ExperimentHub resources into a data.frame 
 }
 
 \usage{
-  makeExperimentHubMetadata(pathToPackage)
   readMetadataFromCsv(pathToPackage)
 }
 
@@ -23,17 +22,12 @@
 
 \details{
   \itemize{
-    \item{makeExperimentHubMetadata:}{
-      Called by \code{addResources}. This function reads in the metadata.csv 
-      file of a contributed package and creates a \link{ExperimentHubMetadata}
-      object to be inserted in the ExperimentHub database.
-    }
     \item{readMetadataFromCsv:}{
-      Called by \code{makeExperimentHubMetadata}. This function reads in
-      the metadata.csv file located in inst/extdata of the 
-      \code{pathToPackage}. It performs checks for required columns and 
-      data types and can be used by package authors to validate their 
-      metadata.csv.
+      Reads the meatdata.csv file located in inst/extdata of the
+      \code{pathToPackage}. The function performs checks for required columns
+      and data types and can be used by package authors to validate their
+      metadata.csv.  The function is used internally by
+      \code{makeExperimentHubMetadata}.
 
       The rows of metadata.csv represent individual \code{ExperimentHub}
       resources (i.e., data objects) and the columns are the metadata
@@ -78,27 +72,59 @@
 
       Note there is no \sQuote{Tags} field in metadata.csv. The metadata
       \sQuote{Tags} are taken from the \sQuote{biocViews} field in the
-      package DESCRIPTION. \sQuote{Tags} are used as search terms and must 
+      package DESCRIPTION file. \sQuote{Tags} are used as search terms and must 
       be valid ExperimentalData biocViews.
     }
   }
 }
 
 \value{
-    \code{readMetadataFromCsv()} returns a data.frame and 
-    \code{makeExperimetHubMetadata()} returns a list of
-    \code{ExperimentHubMetadata} objects.
+    A data.frame. 
 }
 
 \seealso{
   \itemize{
     \item \code{\link{addResources}}
-    \item \code{\link{ExperimentHubMetadata}}
+    \item \code{\link{makeExperimentHubMetadata}}
+    \item \code{\link{ExperimentHubMetadata}} class
   }
 }
 
 \examples{
-## TODO
+
+## Each resource needs a separate row of metadata. This example is for a
+## single resource. If you have multiple resources the arguments below
+## would be character vectors that produced multiple rows in the data.frame.
+
+meta <- data.frame(
+    Title = "RNA-Sequencing dataset from study XYZ",
+    Description = paste0("RNA-seq data from study XYZ containing 10 normal ",
+                         "and 10 tumor samples represented as a",
+                         "SummarizedExperiment")
+    BiocVersion = "3.3",
+    Genome = "GRCh38",
+    SourceType = "BAM",
+    SourceUrl = "http://www.path/to/original/data/file",
+    SourceVersion = "Jan 01 2016",
+    Species = "Homo sapiens",
+    TaxonomyId = 9606,
+    Coordinate_1_based = TRUE,
+    DataProvider = "GEO",
+    Maintainer = "Your Name <youremail@provider.com>",
+    RDataClass = "SummarizedExperiment",
+    DispatchClass = "SummarizedExperiment",
+    ResourceName = "DescriptiveName.Rda")
+)
+
+## Write the data out as 'metadata.csv' and put in the inst/extdata 
+## package directory.
+write.csv(meta, file="metadata.csv", row.names=FALSE)
+
+## Test metadata.csv with readMetadataCsv():
+\dontrun{
+readMetadataFromCsv("path/to/mypackage")
+}
+
 }
 
 \keyword{methods}

@@ -95,8 +95,8 @@ unless otherwise stated.
 
 ## Data objects
 
-Data are not formally part of the software package and are uploaded separately
-to AWS S3. When a package is submitted for review a new AWS S3 bucket is
+Data are not formally part of the software package and are stored separately
+in AWS S3 buckets. When a package is submitted for review a new bucket is
 created with the same name as the package. The author will make the data
 available via dropbox, ftp or another mutually accessible application.
 Resources will be uploaded to S3 by a member of the Bioconductor Core team.
