@@ -5,11 +5,20 @@
 \title{addResources}
 
 \description{
-  Add new resources to ExperimentHub 
+  Add resource metadata to a local ExperimentHub database
 }
 
 \usage{
 addResources(pathToPackage, insert = FALSE, ...)
+}
+
+\details{
+  When \code{insert} is TRUE, \code{addResources} attempts to add the metadata
+  to the local database. A warning is thrown if duplicate files names are
+  found in the local database or if any filenames in the new metadata match
+  those in the existing database. Only metadata records with non-duplicated
+  file names are added to the database. The file name is the name of
+  the data file with the \sQuote{rda} extension.
 }
 
 \arguments{
@@ -28,8 +37,7 @@ addResources(pathToPackage, insert = FALSE, ...)
     S3 buckets.  See https://aws.amazon.com/cli/ for installation instructions.
   }
   \item{\dots}{
-    Arguments passed to \code{pushResources} and \code{pushMetadata}. See 
-    the man pages for a description of arguments.
+    TDB. Currently not used.
   }
 }
 

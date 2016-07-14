@@ -32,12 +32,15 @@ addResources <- function(pathToPackage, insert=FALSE, ...)
 
         dups <- duplicated(current)
         if (any(dups))
-            warning(paste0("local sqlite db has duplicated filenames: ",
+            warning(paste0("sqlite db has duplicated filenames: ",
                     paste(current[dups], collapse=", ")))
         exists <- new %in% current 
-        if (any(exists))
-            stop(paste0("filenames in 'metadata' that exist in local ",
-                 "sqlite db: ", paste(new[exists], collapse=", ")))
+        if (any(exists)) {
+            warning(paste0("metadata records with filenames that exist in ",
+                    "the sqlite db were not inserted: ", 
+                    paste(new[exists], collapse=", ")))
+            metadata <- metadata[!exists]
+        }
 
         message("inserting metadata in db ...") 
         pushMetadata(metadata, url)
