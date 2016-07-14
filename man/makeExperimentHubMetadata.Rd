@@ -24,7 +24,7 @@
   \itemize{
     \item{makeExperimentHubMetadata:}{
       Reads the resource metadata in the metadata.csv file into a
-      \link{ExperimentHubMetadata} object. The \link{ExperpimentHubMetadata}
+      \link{ExperimentHubMetadata} object. The \link{ExperimentHubMetadata}
       is inserted in the ExperimentHub database. This function is used
       internally by \code{addResources} and likely will not be called
       directly.
@@ -39,7 +39,7 @@
 \seealso{
   \itemize{
     \item \code{\link{addResources}}
-    \item \code{\link{readMeatdataFromCsv}}
+    \item \code{\link{readMetadataFromCsv}}
     \item \code{\link{ExperimentHubMetadata}} class
   }
 }

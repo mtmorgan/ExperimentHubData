@@ -1,4 +1,4 @@
-### =========================================================================
+## =========================================================================
 ### addResources() 
 ### -------------------------------------------------------------------------
 ###
@@ -23,6 +23,22 @@ addResources <- function(pathToPackage, insert=FALSE, ...)
 
     ## insert in db
     if(insert) {
+        ## check if any new records already exist
+        new <- sapply(metadata, function(x) basename(x@RDataPath))
+        query <- "SELECT rdatapath FROM rdatapaths"
+        con <- dbconn(ExperimentHub())
+        current <- basename(dbGetQuery(con, query)[,1])
+        dbDisconnect(con)
+
+        dups <- duplicated(current)
+        if (any(dups))
+            warning(paste0("local sqlite db has duplicated filenames: ",
+                    paste(current[dups], collapse=", ")))
+        exists <- new %in% current 
+        if (any(exists))
+            stop(paste0("filenames in 'metadata' that exist in local ",
+                 "sqlite db: ", paste(new[exists], collapse=", ")))
+
         message("inserting metadata in db ...") 
         pushMetadata(metadata, url)
     }

@@ -3,11 +3,12 @@ import(utils)
 import(BiocGenerics)
 import(S4Vectors)
 import(httr)
-import(AnnotationHub)
+import(ExperimentHub)
 import(AnnotationHubData)
 import(BiocCheck) ## non-exported checkBiocViews()
 
 importFrom(BiocInstaller, biocVersion)
+importFrom(DBI, dbGetQuery, dbDisconnect)
 
 importFrom(curl, new_handle, curl, handle_setopt)
 

@@ -25,8 +25,6 @@ readMetadataFromCsv <- function(pathToPackage)
                  c("ResourceName", "character"))
 
     expected <- mat[,1]
-    if (!"DispatchClass" %in% names(meta))
-        DispatchClass <- RDataClass
     missing <- !expected %in% names(meta)
     if (any(missing))
         stop(paste0("missing fields in metadata.csv: ", 

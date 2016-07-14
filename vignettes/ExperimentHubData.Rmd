@@ -58,7 +58,8 @@ unless otherwise stated.
     A script describing the steps involved in making the data object(s). This
     includes where the original data were downloaded from, pre-processing,
     and how the final R object was made. Include a description of any
-    steps performed outside of `R` with third party software.
+    steps performed outside of `R` with third party software. Data objects
+    should be serialized with save() with the .rda extension on the filename.
 
     - make-metadata.R: 
     A script to make the metadata.csv file located in inst/extdata of the 
@@ -100,6 +101,8 @@ in AWS S3 buckets. When a package is submitted for review a new bucket is
 created with the same name as the package. The author will make the data
 available via dropbox, ftp or another mutually accessible application.
 Resources will be uploaded to S3 by a member of the Bioconductor Core team.
+
+Data files should be created with save() and have the .rda extension.
 
 
 # Add additional resources

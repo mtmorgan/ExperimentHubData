@@ -71,10 +71,13 @@
         \item RDataClass: \code{character}. R / Bioconductor class the data
               are stored in.
 
-        \item DispatchClass: \code{character}. Optional specification of
-              DispatchClass used by ExperimentHub to load the resource.
-              Usually the same as \code{RDataClass}. No need to specify
-              this column unless asked to do so by maintainer@bioconductor.org.
+        \item DispatchClass: \code{character}. Class used to determine how
+              to load the data into R. The value for this field should
+              be \sQuote{Rda} with the assumption that the data have been 
+              serialized with \code{save()} and the filename has the 
+              \sQuote{rda} extension. Contact maintainer@bioconductor.org
+              if you data do not meet these assumptions and we can determine
+              the most appropriate dispatch class.
 
         \item ResourceName: \code{character}. Exact file names with Rda
               extension.
@@ -110,7 +113,7 @@ meta <- data.frame(
     Title = "RNA-Sequencing dataset from study XYZ",
     Description = paste0("RNA-seq data from study XYZ containing 10 normal ",
                          "and 10 tumor samples represented as a",
-                         "SummarizedExperiment")
+                         "SummarizedExperiment"),
     BiocVersion = "3.3",
     Genome = "GRCh38",
     SourceType = "BAM",
@@ -122,15 +125,16 @@ meta <- data.frame(
     DataProvider = "GEO",
     Maintainer = "Your Name <youremail@provider.com>",
     RDataClass = "SummarizedExperiment",
-    ResourceName = "FileName.Rda")
+    DispatchClass = "Rda",
+    ResourceName = "FileName.rda"
 )
 
+\dontrun{
 ## Write the data out as 'metadata.csv' and put in the inst/extdata 
 ## package directory.
 write.csv(meta, file="metadata.csv", row.names=FALSE)
 
 ## Test metadata.csv with readMetadataCsv():
-\dontrun{
 readMetadataFromCsv("path/to/mypackage")
 }
 
