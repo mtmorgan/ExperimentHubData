@@ -43,7 +43,7 @@ guide appropriate use the of resources.
 Below is an outline of package organization. The files listed are required
 unless otherwise stated. 
 
-* inst/extadata/
+* inst/extdata/
     - metadata.csv: 
     This file contains the metadata in the format of one row per resource
     to be added to the `ExperimentHub` database. The file should be generated

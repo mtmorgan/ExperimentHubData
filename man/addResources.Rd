@@ -23,7 +23,7 @@ addResources(pathToPackage, insert = FALSE, ...)
 
 \arguments{
   \item{pathToPackage}{
-    Local path to data package; no trailing slash.
+    Full path to data package including package name; no trailing slash.
   }
   \item{insert}{
     A \code{logical} to control if metadata are inserted in the ExperimentHub

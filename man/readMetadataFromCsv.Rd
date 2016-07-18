@@ -16,7 +16,7 @@
 
 \arguments{
   \item{pathToPackage}{
-    full path to package
+    Full path to data package including package name; no trailing slash.
   }
 }
 
