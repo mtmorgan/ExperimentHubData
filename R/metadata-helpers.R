@@ -32,7 +32,7 @@ readMetadataFromCsv <- function(pathToPackage)
     extra<- !names(meta) %in% expected 
     if (any(extra))
         warning(paste0("extra fields in metadata.csv will be ignored: ", 
-                    paste(names(meta)[invalid], collapse=", ")))
+                    paste(names(meta)[extra], collapse=", ")))
 
     ## All fields length 1
     apply(meta, 1, 
