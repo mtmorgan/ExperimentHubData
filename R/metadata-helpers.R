@@ -29,9 +29,9 @@ readMetadataFromCsv <- function(pathToPackage)
     if (any(missing))
         stop(paste0("missing fields in metadata.csv: ", 
                     paste(expected[missing], collapse=", ")))
-    invalid <- !names(meta) %in% expected 
-    if (any(invalid))
-        warning(paste0("invalid fields in metadata.csv will be ignored: ", 
+    extra<- !names(meta) %in% expected 
+    if (any(extra))
+        warning(paste0("extra fields in metadata.csv will be ignored: ", 
                     paste(names(meta)[invalid], collapse=", ")))
 
     ## All fields length 1
@@ -60,9 +60,6 @@ makeExperimentHubMetadata <- function(pathToPackage)
 {
     meta <- readMetadataFromCsv(pathToPackage)
 
-    ## FIXME:
-    #if (BiocCheck:::checkBiocViews(pathToPackage))
-    #    stop("please fix biocViews")
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
     Tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
     lapply(seq_len(nrow(meta)),

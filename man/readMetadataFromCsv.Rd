@@ -1,6 +1,7 @@
 \name{readMetadataFromCsv}
 
 \alias{readMetadataFromCsv}
+\alias{metadata.csv}
 
 \title{
   Read metadata file for ExperimentHub resources into a data.frame
@@ -23,17 +24,17 @@
 \details{
   \itemize{
     \item{readMetadataFromCsv:}{
-      Reads the meatdata.csv file located in inst/extdata of the
+      Reads the metadata.csv file located in inst/extdata of the
       \code{pathToPackage}. The function performs checks for required columns
       and data types and can be used by package authors to validate their
-      metadata.csv.  The function is used internally by
+      metadata.csv. The function is used internally by
       \code{makeExperimentHubMetadata}.
 
       The rows of metadata.csv represent individual \code{ExperimentHub}
       resources (i.e., data objects) and the columns are the metadata
       fields. All fields should be a single character string of length 1.
 
-      Required fields in metadata.csv:
+      Required Fields in metadata.csv:
       \itemize{
         \item Title: \code{character}. Name of the resource. This can be
               the exact file name (if self-describing) or a more complete
@@ -83,16 +84,26 @@
               extension.
       }
 
-      Note there is no \sQuote{Tags} field in metadata.csv. The metadata
-      \sQuote{Tags} are taken from the \sQuote{biocViews} field in the
-      package DESCRIPTION file. \sQuote{Tags} are used as search terms and must 
-      be valid ExperimentalData biocViews.
+      Note there should be no \sQuote{Tags} field in metadata.csv. The metadata
+      \sQuote{Tags} are automatically generated from the \sQuote{biocViews}
+      field in the package DESCRIPTION file. \sQuote{Tags} are used as search
+      terms and the restriction to valid ExperimentalData biocViews is an
+      attempt to standardize terms across resources. This may change in the
+      future.
+
+      The metadata.csv file can have additional columns beyond the 'Required
+      Fields' listed above. These values are not added to the ExperimentHub
+      database but they can be used in package functions to provide an
+      additional level of metadata on the resources.
     }
   }
 }
 
 \value{
-    A data.frame. 
+    A data.frame with one row per resource and a column for each
+    'Required Field'. Additional auto-generated columns, e.g., RDataDateAdded, 
+    RDataPath and PreparerClass may also be present and are used
+    internally by ExperimentHub functions.
 }
 
 \seealso{
