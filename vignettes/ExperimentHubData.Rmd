@@ -71,19 +71,76 @@ unless otherwise stated.
 
     One or more vignettes describing analysis workflows. 
 
+* R/
+
+  - zzz.R:
+    This sample .onLoad() function in a zzz.R file makes each resource name 
+    (i.e., title) into a function which allows the data to be loaded by name. 
+    Substitute the name of your package in place of PACKAGENAME below.
+
+    ```
+    .onLoad <- function(libname, pkgname) {
+        titles <- read.csv(system.file("extdata", "metadata.csv", 
+                          package="PACKAGENAME"), 
+                          stringsAsFactors=FALSE)$Title
+        rda <- gsub(".rda", "", titles, fixed=TRUE)
+        if (!length(rda))
+            stop("no .rda objects found in metadata")
+ 
+        ## Functions to load resources by name:
+        ns <- asNamespace(pkgname)
+        sapply(rda, 
+            function(xx) {
+                func = function(metadata = FALSE) {
+                    if (!isNamespaceLoaded("ExperimentHub"))
+                        attachNamespace("ExperimentHub")
+                    eh <- query(ExperimentHub(), "PACKAGENAME")
+                    ehid <- names(query(eh, xx))
+                    if (!length(ehid))
+                        stop(paste0("resource ", xx, 
+                             "not found in ExperimentHub"))
+                    if (metadata)
+                        eh[ehid]
+                    else eh[[ehid]]
+                }
+                assign(xx, func, envir=ns)
+                namespaceExport(ns, xx)
+            })
+    }
+    ```
+
+  - Optional functions to enhance data exploration.
+
 * man/
 
-    package man page: 
+  - package man page: 
     The package man page serves as a landing point and should briefly describe
-    all resources associated with the package. 
+    all resources associated with the package. There should be an \alias
+    entry for each resource title either on the package man page or individual
+    man pages.
  
-    resource man pages: 
+  - resource man pages: 
     It is recommended (but not required) that each resource have a dedicated 
     man page.
 
-* R/
+  - document data loading:
+    When the package is loaded the zzz.R file makes the title of each
+    resource into a function with a single argument, 'metadata'. The man
+    page should document that data can be loaded by name, e.g.,
+ 
+    ```
+    resourceA(meta = FALSE) ## data are loaded into the workspace
+    resourceA(meta = TRUE)  ## only the metadata are displayed
+    ```
+    Optionally, the data can be loaded through the ExperimentHub interface.
 
-    Optional functions to enhance data exploration.
+    ```
+    library(ExperimentHub)
+    eh <- ExperimentHub()
+    myfiles <- query(eh, "PACKAGENAME")
+    myfiles[[1]]  ## load the first resource in the list
+    ```
+
 
 * DESCRIPTION / NAMESPACE
 
