@@ -27,11 +27,18 @@ package contains the resource metadata, man pages, vignette and any supporting
 existing `Bioconductor` experimental data packages except the data are
 stored in AWS S3 buckets instead of the data/ directory of the package.
 
-New packages should be submitted to the `Bioconductor` tracker and will
-go through the usual package review process. Contact packages@bioconductor.org 
-for more information.
+Below are the steps required for adding new resources.
 
-## Software package
+## Notify `Bioconductor` team member
+
+The man page and vignette examples in the software package will not work until
+the data are available in ExperimentHub. Adding the data to AWS S3 and the
+metadata to the production database involves assistance from a `Bioconductor`
+team member.  If you are interested in submitting a package, please send an
+email to packages@bioconductor.org so a team member can work with you through
+the process.
+
+## Building the software package
 
 When a resource is downloaded from `ExperimentHub` the associated software
 package is loaded in the workspace making the man pages and vignettes readily
@@ -153,13 +160,26 @@ unless otherwise stated.
 
 ## Data objects
 
-Data are not formally part of the software package and are stored separately
-in AWS S3 buckets. When a package is submitted for review a new bucket is
-created with the same name as the package. The author will make the data
-available via dropbox, ftp or another mutually accessible application.
-Resources will be uploaded to S3 by a member of the Bioconductor Core team.
+Data are not formally part of the software package and are stored separately in
+AWS S3 buckets. The author should make the data available via dropbox, ftp or
+another mutually accessible application and it will be uploaded to S3 by a
+member of the `Bioconductor` team.
 
 Data files should be created with save() and have the .rda extension.
+
+## Metadata
+
+When you are satisfied with the representation of your resources in 
+make-metadata.R (which produces metadata.csv) the `Bioconductor` team
+member will add the metadata to the production database.
+
+## Package review 
+
+Once the data are in AWS S3 and the metadata have been added to the
+production database the man pages and vignette can be finalized. When the
+package passes R CMD build and check it can be submitted to the 
+[package tracker](https://github.com/Bioconductor/Contributions) for 
+review.
 
 
 # Add additional resources
