@@ -64,7 +64,8 @@
 
         \item Coordinate_1_based: \code{logical}. TRUE if data are 1-based.
 
-        \item DataProvider: \code{character}. Name of original data provider. 
+        \item DataProvider: \code{character}. Name of company or institution
+              that supplied the original (raw) data.
 
         \item Maintainer: \code{character}. Maintainer name and email in the
               following format: Maintainer Name <username@address>.
