@@ -53,7 +53,12 @@ addResources(pathToPackage, insert = FALSE, ...)
 }
 
 \examples{
-## TODO
+  \dontrun{
+    ## Generate metadata for inspection
+    addResources("/home/vobencha/mypackage", insert=FALSE)
+    ## Inset metadata into ExperimentHub database
+    addResources("/home/vobencha/mypackage", insert=TRUE)
+  }
 }
 
 \keyword{methods}

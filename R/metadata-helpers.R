@@ -31,7 +31,7 @@ readMetadataFromCsv <- function(pathToPackage)
                     paste(expected[missing], collapse=", ")))
     extra<- !names(meta) %in% expected 
     if (any(extra))
-        warning(paste0("extra fields in metadata.csv will be ignored: ", 
+        message(paste0("extra fields in metadata.csv will be ignored: ", 
                     paste(names(meta)[extra], collapse=", ")))
 
     ## All fields length 1
@@ -61,7 +61,7 @@ makeExperimentHubMetadata <- function(pathToPackage)
     meta <- readMetadataFromCsv(pathToPackage)
 
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
-    Tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
+    .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
     lapply(seq_len(nrow(meta)),
         function(x) {
             with(meta[x,], 
@@ -74,7 +74,7 @@ makeExperimentHubMetadata <- function(pathToPackage)
                                        Coordinate_1_based=Coordinate_1_based, 
                                        DataProvider=DataProvider,
                                        Maintainer=Maintainer, 
-                                       RDataClass=RDataClass, Tags=Tags, 
+                                       RDataClass=RDataClass, Tags=.tags, 
                                        RDataDateAdded=RDataDateAdded, 
                                        RDataPath=RDataPath, 
                                        DispatchClass=DispatchClass,
