@@ -1,14 +1,18 @@
 ---
 title: "Introduction to ExperimentHubData"
+author: "Valerie Obenchain"
+date: "Modified: August 2016. Compiled: `r format(Sys.Date(), '%d %b %Y')`"
 output:
   BiocStyle::html_document:
     toc: true
+vignette: >
+  %\VignetteIndexEntry{Introduction to ExperimentHubData}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
-<!--
-%% \VignetteEngine{knitr::rmarkdown}
-%\VignetteIndexEntry{Introduction to ExperimentHubData}
--->
 
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown()
+```
 
 # Overview
 
@@ -19,7 +23,7 @@ publications or experiments.  The resources are generally not files of raw data
 objects such as GRanges, SummarizedExperiment, data.frame etc.  Each resource 
 has associated metadata that can be searched through the `ExperimentHub` client interface.
 
-# Submit new resources
+# New resources
 
 Resources are contributed to `ExperimentHub` in the form of a package.  The
 package contains the resource metadata, man pages, vignette and any supporting
@@ -57,7 +61,7 @@ unless otherwise stated.
     from the code in inst/scripts/make-metadata.R where the final data are
     written out with write.csv(..., row.names=FALSE). The required column 
     names and data types are specified in 
-    `ExperimentHubData::readMetadataFromCsv()`. See ?`readMetadataFromCsv` for 
+    `AnnotationHubData::readMetadataFromCsv()`. See ?`readMetadataFromCsv` for 
     details.
 
 * inst/scripts/

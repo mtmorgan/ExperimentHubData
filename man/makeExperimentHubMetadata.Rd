@@ -7,7 +7,8 @@
 }
 
 \description{
-  Make ExperimentHubMetadata objects from csv file of metadata
+  Make ExperimentHubMetadata objects from metadata.csv file located in 
+  the "inst/extdata/" package directory of an ExperimentHub package.
 }
 
 \usage{
@@ -25,9 +26,8 @@
     \item{makeExperimentHubMetadata:}{
       Reads the resource metadata in the metadata.csv file into a
       \link{ExperimentHubMetadata} object. The \link{ExperimentHubMetadata}
-      is inserted in the ExperimentHub database. This function is used
-      internally by \code{addResources} and likely will not be called
-      directly.
+      is inserted in the ExperimentHub database. Intended for internal
+      use or package authors checking the validity of package metadata.
     }
   }
 }

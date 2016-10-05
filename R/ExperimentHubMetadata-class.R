@@ -17,6 +17,39 @@ setClass("ExperimentHubMetadata",
 ## Constructor
 ## 
 
+makeExperimentHubMetadata <- function(pathToPackage) 
+{
+    ## Differences from makeAnnotationHubMetadata:
+    ## - package put in PreparerClass slot
+    ## - biocViews added to Tags slot
+    meta <- readMetadataFromCsv(pathToPackage)
+    package <- basename(pathToPackage)
+    meta$PreparerClass <- package 
+    meta$RDataPath <- paste0(package,"/",meta$ResourceName)
+
+    description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
+    .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
+    lapply(seq_len(nrow(meta)),
+        function(x) {
+            with(meta[x,], 
+                 ExperimentHubMetadata(Title=Title, Description=Description, 
+                                       BiocVersion=BiocVersion, Genome=Genome, 
+                                       SourceType=SourceType, 
+                                       SourceUrl=SourceUrl,
+                                       SourceVersion=SourceVersion, 
+                                       Species=Species, TaxonomyId=TaxonomyId,
+                                       Coordinate_1_based=Coordinate_1_based, 
+                                       DataProvider=DataProvider,
+                                       Maintainer=Maintainer, 
+                                       RDataClass=RDataClass, Tags=.tags, 
+                                       RDataDateAdded=RDataDateAdded, 
+                                       RDataPath=RDataPath, 
+                                       DispatchClass=DispatchClass,
+                                       PreparerClass=PreparerClass)) 
+        }
+    )
+}
+
 ExperimentHubMetadata <-
     function(ExperimentHubRoot=NA_character_, 
         BiocVersion=biocVersion(),
