@@ -21,11 +21,10 @@ makeExperimentHubMetadata <- function(pathToPackage)
 {
     ## Differences from makeAnnotationHubMetadata:
     ## - package put in PreparerClass slot
-    ## - biocViews added to Tags slot
+    ## - Tags are biocViews
     meta <- readMetadataFromCsv(pathToPackage)
     package <- basename(pathToPackage)
     meta$PreparerClass <- package 
-    meta$RDataPath <- paste0(package,"/",meta$ResourceName)
 
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
     .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
