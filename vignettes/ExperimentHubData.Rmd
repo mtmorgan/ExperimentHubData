@@ -1,7 +1,7 @@
 ---
 title: "Introduction to ExperimentHubData"
 author: "Valerie Obenchain"
-date: "Modified: August 2016. Compiled: `r format(Sys.Date(), '%d %b %Y')`"
+date: "Modified: October 2016. Compiled: `r format(Sys.Date(), '%d %b %Y')`"
 output:
   BiocStyle::html_document:
     toc: true
@@ -190,10 +190,12 @@ review.
 
 Multiple versions of the data can be added to the same package as they
 become available. Be sure the title is descriptive and reflects the
-distinguishing information such as genome build Adding more resources of the same typeto an existing package requires the following steps:
+distinguishing information such as genome build. Adding new resources 
+to an existing package requires the following steps:
 
 * make data available via dropbox, ftp, etc. and notify 
-  maintainer@bioconductor.org
+  maintainer@bioconductor.org; if you have access to the AWS S3 buckeet
+  you can upload the files yourself
 
 * update make-metadata.R with the new metadata information
 
@@ -201,7 +203,10 @@ distinguishing information such as genome build Adding more resources of the sam
 
 * bump package version and commit to svn/git
 
-Contact maintainer@bioconductor.org with any questions.
+* notify maintainer@bioconductor.org that an update is ready and
+  a team member will add the new metadata to the production database;
+  new resources will not be visible in ExperimentHub until
+  the metadata are added to the database.
 
 # Bug fixes 
 
