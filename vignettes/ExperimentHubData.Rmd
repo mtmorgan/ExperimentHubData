@@ -231,13 +231,19 @@ A bug fix may involve a change to the metadata, data resource or both.
 
 # Remove resources
 
+Removing resources should be done with caution. The intent is that
+ExperimentHub be a 'reproducible' resource by providing a stable snapshot
+of the data. Data made available in Bioconductor version x.y.z should be
+available for all versions greater than x.y.z. Unfortunately this is not 
+always possible. If you find it necessary to remove data from ExperimentHub 
+please contact maintainer@bioconductor.org for assistance.
+
 When a resource is removed from ExperimentHub the 'status' field in the 
 metadata is modified to explain why they are no longer available. Once
 this status is changed the ExperimentHub() constructor will not list the 
 resource among the available ids. An attempt to extract the resource with 
 '[[' and the EH id will return an error along with the status message.
 
-To remove a resource from ExperimentHub contact maintainer@bioconductor.org.
 
 # `ExperimentHub_docker`
 

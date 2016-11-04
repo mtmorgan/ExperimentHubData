@@ -24,7 +24,7 @@ addResources <- function(pathToPackage, insert=FALSE, ...)
     ## insert in db
     if(insert) {
         ## check if any new records already exist
-        new <- sapply(metadata, function(x) basename(x@RDataPath))
+        all <- sapply(metadata, function(x) basename(x@RDataPath))
         query <- "SELECT rdatapath FROM rdatapaths"
         con <- dbconn(ExperimentHub())
         current <- basename(dbGetQuery(con, query)[,1])
@@ -34,11 +34,11 @@ addResources <- function(pathToPackage, insert=FALSE, ...)
         if (any(dups))
             warning(paste0("sqlite db has duplicated filenames: ",
                     paste(current[dups], collapse=", ")))
-        exists <- new %in% current 
+        exists <- all %in% current 
         if (any(exists)) {
             warning(paste0("metadata records with filenames that exist in ",
                     "the sqlite db were not inserted: ", 
-                    paste(new[exists], collapse=", ")))
+                    paste(all[exists], collapse=", ")))
             metadata <- metadata[!exists]
         }
 
