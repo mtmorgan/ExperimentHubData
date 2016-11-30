@@ -123,35 +123,33 @@ unless otherwise stated.
   - Optional functions to enhance data exploration.
 
 * man/
+    - package man page: 
+      The package man page serves as a landing point and should briefly describe
+      all resources associated with the package. There should be an \alias
+      entry for each resource title either on the package man page or individual
+      man pages.
 
-  - package man page: 
-    The package man page serves as a landing point and should briefly describe
-    all resources associated with the package. There should be an \alias
-    entry for each resource title either on the package man page or individual
-    man pages.
+    - resource man pages: 
+      It is recommended (but not required) that each resource have a dedicated 
+      man page.
+
+    - document how data are loaded:
+      When the package is loaded the zzz.R file makes the title of each
+      resource into a function with a single argument, 'metadata'. The man
+      page should document that data can be loaded by name, e.g.,
  
-  - resource man pages: 
-    It is recommended (but not required) that each resource have a dedicated 
-    man page.
+      ```
+      resourceA(meta = FALSE) ## data are loaded into the workspace
+      resourceA(meta = TRUE)  ## only the metadata are displayed
+      ```
+      Optionally, the data can be loaded through the ExperimentHub interface.
 
-  - document data loading:
-    When the package is loaded the zzz.R file makes the title of each
-    resource into a function with a single argument, 'metadata'. The man
-    page should document that data can be loaded by name, e.g.,
- 
-    ```
-    resourceA(meta = FALSE) ## data are loaded into the workspace
-    resourceA(meta = TRUE)  ## only the metadata are displayed
-    ```
-    Optionally, the data can be loaded through the ExperimentHub interface.
-
-    ```
-    library(ExperimentHub)
-    eh <- ExperimentHub()
-    myfiles <- query(eh, "PACKAGENAME")
-    myfiles[[1]]  ## load the first resource in the list
-    ```
-
+      ```
+      library(ExperimentHub)
+      eh <- ExperimentHub()
+      myfiles <- query(eh, "PACKAGENAME")
+      myfiles[[1]]  ## load the first resource in the list
+      ```
 
 * DESCRIPTION / NAMESPACE
 
