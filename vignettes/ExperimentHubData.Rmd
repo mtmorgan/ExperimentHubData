@@ -85,40 +85,23 @@ unless otherwise stated.
 * R/
 
   - zzz.R:
-    This sample .onLoad() function in a zzz.R file makes each resource name 
-    (i.e., title) into a function which allows the data to be loaded by name. 
-    Substitute the name of your package in place of PACKAGENAME below.
+    Optional. You can include a .onLoad() function in a zzz.R file that
+    exports each resource name (i.e., title) into a function. This allows
+    the data to be loaded by name, e.g., resouce123().
 
     ```
     .onLoad <- function(libname, pkgname) {
-        titles <- read.csv(system.file("extdata", "metadata.csv", 
-                          package="PACKAGENAME"), 
-                          stringsAsFactors=FALSE)$Title
-        rda <- gsub(".rda", "", titles, fixed=TRUE)
-        if (!length(rda))
-            stop("no .rda objects found in metadata")
- 
-        ## Functions to load resources by name:
-        ns <- asNamespace(pkgname)
-        sapply(rda, 
-            function(xx) {
-                func = function(metadata = FALSE) {
-                    if (!isNamespaceLoaded("ExperimentHub"))
-                        attachNamespace("ExperimentHub")
-                    eh <- query(ExperimentHub(), "PACKAGENAME")
-                    ehid <- names(query(eh, xx))
-                    if (!length(ehid))
-                        stop(paste0("resource ", xx, 
-                             "not found in ExperimentHub"))
-                    if (metadata)
-                        eh[ehid]
-                    else eh[[ehid]]
-                }
-                assign(xx, func, envir=ns)
-                namespaceExport(ns, xx)
-            })
+          fl <- system.file("extdata", "metadata.csv", package=pkgname)
+          titles <- read.csv(fl, stringsAsFactors=FALSE)$Title
+          createHubAccessors(pkgname, titles)
     }
     ```
+    See the details of this function with
+    ExperimentHub::createHubAccessors and ExperimentHub:::.hubAccessorFactory.
+    The function created for each resource has a 'metadata' argument; when
+    metadata=TRUE, just the metadata are loaded (equivalent to single-bracket
+    method on an ExperimentHub object) and when FALSE the full resource is 
+    loaded (equivalent to double-bracket method).
 
   - Optional functions to enhance data exploration.
 
@@ -130,30 +113,37 @@ unless otherwise stated.
       man pages.
 
     - resource man pages: 
-      It is recommended (but not required) that each resource have a dedicated 
-      man page.
+      Resources can be documented on the same page, grouped by common type
+      or have their own dedicated man pages.
 
     - document how data are loaded:
-      When the package is loaded the zzz.R file makes the title of each
-      resource into a function with a single argument, 'metadata'. The man
-      page should document that data can be loaded by name, e.g.,
- 
-      ```
-      resourceA(meta = FALSE) ## data are loaded into the workspace
-      resourceA(meta = TRUE)  ## only the metadata are displayed
-      ```
-      Optionally, the data can be loaded through the ExperimentHub interface.
-
+      Data can be accessed via the standard ExperimentHub interface with
+      single and double-bracket methods, e.g., 
+      
       ```
       library(ExperimentHub)
       eh <- ExperimentHub()
       myfiles <- query(eh, "PACKAGENAME")
-      myfiles[[1]]  ## load the first resource in the list
+      myfiles[[1]]        ## load the first resource in the list
+      myfiles[["EH123"]]  ## load by EH id
       ```
+      
+      If a .onLoad() function is used to export each resource as a function 
+      also document that method of loading, e.g.,
+ 
+      ```
+      resourceA(meta = FALSE) ## data are loaded
+      resourceA(meta = TRUE)  ## metadata are displayed
+      ```
+
 
 * DESCRIPTION / NAMESPACE
 
-    The package should depend on and fully import ExperimentHub.
+    The package should depend on and fully import ExperimentHub. If using
+    the suggested .onLoad() function, import the utils package in the
+    DESCRIPTION file and selectively importFrom(utils, read.csv) in the
+    NAMESPACE.
+
     Package authors are encouraged to use the ExperimentHub::listResources() and 
     ExperimentHub::loadResource() functions in their man pages and vignette.
     These helpers are designed to facilitate data discovery within a specific
