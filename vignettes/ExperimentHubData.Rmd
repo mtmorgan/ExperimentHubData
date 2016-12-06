@@ -1,7 +1,7 @@
 ---
 title: "Introduction to ExperimentHubData"
 author: "Valerie Obenchain"
-date: "Modified: October 2016. Compiled: `r format(Sys.Date(), '%d %b %Y')`"
+date: "Modified: December 2016. Compiled: `r format(Sys.Date(), '%d %b %Y')`"
 output:
   BiocStyle::html_document:
     toc: true
