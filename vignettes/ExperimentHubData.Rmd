@@ -96,12 +96,12 @@ unless otherwise stated.
           createHubAccessors(pkgname, titles)
     }
     ```
-    See the details of this function with
-    ExperimentHub::createHubAccessors and ExperimentHub:::.hubAccessorFactory.
-    The function created for each resource has a 'metadata' argument; when
-    metadata=TRUE, just the metadata are loaded (equivalent to single-bracket
-    method on an ExperimentHub object) and when FALSE the full resource is 
-    loaded (equivalent to double-bracket method).
+    Internal detail is in ExperimentHub::createHubAccessors and 
+    ExperimentHub:::.hubAccessorFactory funtions. The resource-named function 
+    has a single 'metadata' argument. When metadata=TRUE, the metadata are 
+    loaded (equivalent to single-bracket method on an ExperimentHub object) 
+    and when FALSE the full resource is loaded (equivalent to double-bracket 
+    method).
 
   - Optional functions to enhance data exploration.
 
@@ -176,46 +176,53 @@ review.
 
 # Add additional resources
 
-Multiple versions of the data can be added to the same package as they
-become available. Be sure the title is descriptive and reflects the
-distinguishing information such as genome build. Adding new resources 
-to an existing package requires the following steps:
+Metadata for new versions of the data can be added to the same package as they
+become available. 
 
-* make data available via dropbox, ftp, etc. and notify 
-  maintainer@bioconductor.org; if you have access to the AWS S3 buckeet
-  you can upload the files yourself
+* The titles for the new versions must be unique and not match the title of
+  any resource currently in AnnotationHub. Good practice would be to 
+  include the version and / or genome build in the title.
 
-* update make-metadata.R with the new metadata information
+* Make data available via dropbox, ftp, etc. and notify 
+  maintainer@bioconductor.org
 
-* re-generate the metadata.csv file
+* Update make-metadata.R with the new metadata information
 
-* bump package version and commit to svn/git
+* Generate a new or updated metadata.csv file. The package should contain
+  metadata for all versions of the data in AnnotationHub.  When adding a new
+  version it might be helpful to write a new csv file named by version, e.g.,
+  metadata_v84.csv, metadata_85.csv etc.
 
-* notify maintainer@bioconductor.org that an update is ready and
+* Bump package version and commit to svn/git
+
+* Notify maintainer@bioconductor.org that an update is ready and
   a team member will add the new metadata to the production database;
   new resources will not be visible in ExperimentHub until
   the metadata are added to the database.
 
+Contact maintainer@bioconductor.org with any questions.
 # Bug fixes 
 
 A bug fix may involve a change to the metadata, data resource or both.
 
 ## Update the resource 
 
-* the replacement resource must have the same name as the original
+* The replacement resource must have the same name as the original
 
-* notify maintainer@bioconductor.org that you want to replace the data
+* Notify maintainer@bioconductor.org that you want to replace the data
   and make the files available via dropbox, ftp, etc. 
 
 ## Update the metadata
 
-* notify maintainer@bioconductor.org that you want to change the metadata
+New metadata records can be added for new resources but modifying existing
+records is discouraged. Record modification will only be done in the case of 
+bug fixes.
 
-* update make-metadata.R with modified information
+* Notify maintainer@bioconductor.org that you want to change the metadata
 
-* regenerate metadata.csv
+* Update make-metadata.R with modified information
 
-* bump the package version and commit to svn/git
+* Bump the package version and commit to svn/git
 
 # Remove resources
 
