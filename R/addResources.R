@@ -36,9 +36,9 @@ addResources <- function(pathToPackage, insert=FALSE, ...)
                     paste(current[dups], collapse=", ")))
         exists <- all %in% current 
         if (any(exists)) {
-            warning(paste0("metadata records with filenames that exist in ",
-                    "the sqlite db were not inserted: ", 
-                    paste(all[exists], collapse=", ")))
+            warning("metadata records with filenames that exist in ",
+                    "the sqlite db were not inserted: ")
+            selectSome(all[exists])
             metadata <- metadata[!exists]
         }
 
