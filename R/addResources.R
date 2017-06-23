@@ -9,9 +9,9 @@
 ##       An alternative is to make updateResources() more flexible ...
 addResources <- function(pathToPackage, insert=FALSE, ...)
 {
-
     if (insert) {
-        if(is.null(url <- getOption("EXPERIMENT_HUB_SERVER_POST_URL")))
+        url <- getOption("EXPERIMENT_HUB_SERVER_POST_URL")
+        if (is.null(url))
             stop(paste0("When 'insert=TRUE' option ",
                         "EXPERIMENT_HUB_SERVER_POST_URL must be set ",
                         "in the global environment or .Rprofile"))
@@ -21,28 +21,28 @@ addResources <- function(pathToPackage, insert=FALSE, ...)
     message("generating metadata ...") 
     metadata <- makeExperimentHubMetadata(pathToPackage)
 
+    ## duplicates and pre-existing records
+    all <- sapply(metadata, function(x) basename(x@RDataPath))
+    query <- "SELECT rdatapath FROM rdatapaths"
+    con <- dbconn(ExperimentHub())
+    current <- basename(dbGetQuery(con, query)[,1])
+    dbDisconnect(con)
+
+    dups <- duplicated(current)
+    if (any(dups))
+        warning(paste0("ExperimentHub db has duplicated filenames: ",
+                paste(current[dups], collapse=", ")))
+
+    exists <- all %in% current 
+    if (any(exists)) {
+        warning(paste0(sum(exists), " metadata titles are duplicates of ",
+                       "records in ExperimentHub and will not be inserted"))
+        metadata <- metadata[!exists]
+    }
+
     ## insert in db
-    if(insert) {
-        ## check if any new records already exist
-        all <- sapply(metadata, function(x) basename(x@RDataPath))
-        query <- "SELECT rdatapath FROM rdatapaths"
-        con <- dbconn(ExperimentHub())
-        current <- basename(dbGetQuery(con, query)[,1])
-        dbDisconnect(con)
-
-        dups <- duplicated(current)
-        if (any(dups))
-            warning(paste0("sqlite db has duplicated filenames: ",
-                    paste(current[dups], collapse=", ")))
-        exists <- all %in% current 
-        if (any(exists)) {
-            warning("metadata records with filenames that exist in ",
-                    "the sqlite db were not inserted: ")
-            selectSome(all[exists])
-            metadata <- metadata[!exists]
-        }
-
-        message("inserting metadata in db ...") 
+    if (insert) {
+        message(paste0("inserting ", sum(!exists), " records ...")) 
         pushMetadata(metadata, url)
     }
 

@@ -13,17 +13,24 @@ addResources(pathToPackage, insert = FALSE, ...)
 }
 
 \details{
+  This function is used by the Bioconductor Core team to add new
+  metadata to the production database.
+
   When \code{insert} is TRUE, \code{addResources} attempts to add the metadata
-  to the local database. A warning is thrown if duplicate files names are
-  found in the local database or if any filenames in the new metadata match
-  those in the existing database. Only metadata records with non-duplicated
-  file names are added to the database. The file name is the name of
-  the data file with the \sQuote{rda} extension.
+  to the local database. (NOTE: A local database can be created with the
+  ExperimentHub docker). Records in ExperimentHub must have unique file names.
+  If the new metadata have duplicate file names a warning is thrown
+  and the records are omitted from those added to the database.
+
+  This function does not add data to an AWS S3 bucket. ExperimentHub packages
+  do not have 'recipes' that generate data on the fly. Instead, data files 
+  are provided by the maintainer in final form and added to the appropriate
+  S3 location in a separate step.
 }
 
 \arguments{
   \item{pathToPackage}{
-    Full path to data package including package name; no trailing slash.
+    Full path to data package including package name.
   }
   \item{insert}{
     A \code{logical} to control if metadata are inserted in the ExperimentHub
