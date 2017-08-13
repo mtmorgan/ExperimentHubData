@@ -1,7 +1,7 @@
 ---
 title: "Introduction to ExperimentHubData"
 author: "Valerie Obenchain"
-date: "Modified: December 2016. Compiled: `r format(Sys.Date(), '%d %b %Y')`"
+date: "Modified: August 2017. Compiled: `r format(Sys.Date(), '%d %b %Y')`"
 output:
   BiocStyle::html_document:
     toc: true
@@ -54,101 +54,96 @@ guide appropriate use the of resources.
 Below is an outline of package organization. The files listed are required
 unless otherwise stated. 
 
-* inst/extdata/
-    - metadata.csv: 
-    This file contains the metadata in the format of one row per resource
-    to be added to the `ExperimentHub` database. The file should be generated
-    from the code in inst/scripts/make-metadata.R where the final data are
-    written out with write.csv(..., row.names=FALSE). The required column 
-    names and data types are specified in 
-    `AnnotationHubData::readMetadataFromCsv()`. See ?`readMetadataFromCsv` for 
-    details.
+`inst/extdata/`
 
-* inst/scripts/
-    - make-data.R: 
-    A script describing the steps involved in making the data object(s). This
-    includes where the original data were downloaded from, pre-processing,
-    and how the final R object was made. Include a description of any
-    steps performed outside of `R` with third party software. Data objects
-    should be serialized with save() with the .rda extension on the filename.
+- `metadata.csv`: 
+  This file contains the metadata in the format of one row per resource
+  to be added to the `ExperimentHub` database. The file should be generated
+  from the code in inst/scripts/make-metadata.R where the final data are
+  written out with `write.csv(..., row.names=FALSE)`. The required column 
+  names and data types are specified in 
+  `AnnotationHubData::readMetadataFromCsv()`. See ?`readMetadataFromCsv` for 
+  details.
 
-    - make-metadata.R: 
-    A script to make the metadata.csv file located in inst/extdata of the 
-    package. See ?`readMetadataFromCsv` for a description of expected fields 
-    and data types.  `readMetadataFromCsv()` can be used to validate the 
-    metadata.csv file before submitting the package.
+`inst/scripts/`
 
-* vignettes/
+- `make-data.R`: 
+  A script describing the steps involved in making the data object(s). This
+  includes where the original data were downloaded from, pre-processing,
+  and how the final R object was made. Include a description of any
+  steps performed outside of `R` with third party software. Data objects
+  should be serialized with `save()` with the .rda extension on the filename.
 
-    One or more vignettes describing analysis workflows. 
+- `make-metadata.R`: 
+  A script to make the metadata.csv file located in inst/extdata of the 
+  package. See ?`readMetadataFromCsv` for a description of expected fields 
+  and data types.  `readMetadataFromCsv()` can be used to validate the 
+  metadata.csv file before submitting the package.
 
-* R/
+`vignettes/`
 
-  - zzz.R:
-    Optional. You can include a .onLoad() function in a zzz.R file that
-    exports each resource name (i.e., title) into a function. This allows
-    the data to be loaded by name, e.g., resouce123().
+- One or more vignettes describing analysis workflows. 
 
-    ```
-    .onLoad <- function(libname, pkgname) {
-          fl <- system.file("extdata", "metadata.csv", package=pkgname)
-          titles <- read.csv(fl, stringsAsFactors=FALSE)$Title
-          createHubAccessors(pkgname, titles)
-    }
-    ```
-    Internal detail is in ExperimentHub::createHubAccessors and 
-    ExperimentHub:::.hubAccessorFactory funtions. The resource-named function 
-    has a single 'metadata' argument. When metadata=TRUE, the metadata are 
-    loaded (equivalent to single-bracket method on an ExperimentHub object) 
-    and when FALSE the full resource is loaded (equivalent to double-bracket 
+`R/`
+  
+- `zzz.R`: Optional. You can include a `.onLoad()` function in a zzz.R file that
+  exports each resource name (i.e., title) into a function. This allows the data
+  to be loaded by name, e.g., `resouce123()`.
+
+        .onLoad <- function(libname, pkgname) {
+            fl <- system.file("extdata", "metadata.csv", package=pkgname)
+            titles <- read.csv(fl, stringsAsFactors=FALSE)$Title
+            createHubAccessors(pkgname, titles)
+        }
+
+    Internal detail is in `ExperimentHub::createHubAccessors()` and
+    `ExperimentHub:::.hubAccessorFactory()` funtions. The resource-named
+    function has a single 'metadata' argument. When metadata=TRUE, the metadata
+    are loaded (equivalent to single-bracket method on an ExperimentHub object)
+    and when FALSE the full resource is loaded (equivalent to double-bracket
     method).
 
-  - Optional functions to enhance data exploration.
+- `R/*.R`: Optional. Functions to enhance data exploration.
 
-* man/
-    - package man page: 
-      The package man page serves as a landing point and should briefly describe
-      all resources associated with the package. There should be an \alias
-      entry for each resource title either on the package man page or individual
-      man pages.
+`man/`
 
-    - resource man pages: 
-      Resources can be documented on the same page, grouped by common type
-      or have their own dedicated man pages.
+- package man page: 
+  The package man page serves as a landing point and should briefly describe
+  all resources associated with the package. There should be an \alias
+  entry for each resource title either on the package man page or individual
+  man pages.
 
-    - document how data are loaded:
-      Data can be accessed via the standard ExperimentHub interface with
-      single and double-bracket methods, e.g., 
-      
-      ```
-      library(ExperimentHub)
-      eh <- ExperimentHub()
-      myfiles <- query(eh, "PACKAGENAME")
-      myfiles[[1]]        ## load the first resource in the list
-      myfiles[["EH123"]]  ## load by EH id
-      ```
-      
-      If a .onLoad() function is used to export each resource as a function 
-      also document that method of loading, e.g.,
- 
-      ```
-      resourceA(meta = FALSE) ## data are loaded
-      resourceA(meta = TRUE)  ## metadata are displayed
-      ```
+- resource man pages: 
+  Resources can be documented on the same page, grouped by common type
+  or have their own dedicated man pages.
+
+- document how data are loaded:
+  Data can be accessed via the standard ExperimentHub interface with
+  single and double-bracket methods, e.g., 
+  
+        library(ExperimentHub)
+        eh <- ExperimentHub()
+        myfiles <- query(eh, "PACKAGENAME")
+        myfiles[[1]]        ## load the first resource in the list
+        myfiles[["EH123"]]  ## load by EH id
+  
+- If a `.onLoad()` function is used to export each resource as a function 
+  also document that method of loading, e.g.,
+
+        resourceA(meta = FALSE) ## data are loaded
+        resourceA(meta = TRUE)  ## metadata are displayed
 
 
-* DESCRIPTION / NAMESPACE
+`DESCRIPTION` / `NAMESPACE`
 
-    The package should depend on and fully import ExperimentHub. If using
-    the suggested .onLoad() function, import the utils package in the
-    DESCRIPTION file and selectively importFrom(utils, read.csv) in the
-    NAMESPACE.
+- The package should depend on and fully import ExperimentHub. If using the
+  suggested `.onLoad()` function, import the utils package in the DESCRIPTION
+  file and selectively importFrom(utils, read.csv) in the NAMESPACE.
 
-    Package authors are encouraged to use the ExperimentHub::listResources() and 
-    ExperimentHub::loadResource() functions in their man pages and vignette.
-    These helpers are designed to facilitate data discovery within a specific
-    package vs within all of ExperimentHub.
-
+- Package authors are encouraged to use the `ExperimentHub::listResources()` and
+  `ExperimentHub::loadResource()` functions in their man pages and vignette.
+  These helpers are designed to facilitate data discovery within a specific
+  package vs within all of ExperimentHub.
 
 ## Data objects
 
@@ -157,7 +152,7 @@ AWS S3 buckets. The author should make the data available via dropbox, ftp or
 another mutually accessible application and it will be uploaded to S3 by a
 member of the `Bioconductor` team.
 
-Data files should be created with save() and have the .rda extension.
+Data files should be created with `save()` and have the .rda extension.
 
 ## Metadata
 
@@ -235,7 +230,7 @@ please contact maintainer@bioconductor.org for assistance.
 
 When a resource is removed from ExperimentHub the 'status' field in the 
 metadata is modified to explain why they are no longer available. Once
-this status is changed the ExperimentHub() constructor will not list the 
+this status is changed the `ExperimentHub()` constructor will not list the 
 resource among the available ids. An attempt to extract the resource with 
 '[[' and the EH id will return an error along with the status message.
 
