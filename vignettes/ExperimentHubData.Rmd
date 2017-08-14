@@ -3,16 +3,13 @@ title: "Introduction to ExperimentHubData"
 author: "Valerie Obenchain"
 date: "Modified: August 2017. Compiled: `r format(Sys.Date(), '%d %b %Y')`"
 output:
-  BiocStyle::html_document:
+  BiocStyle::html_document2:
     toc: true
+    toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{Introduction to ExperimentHubData}
   %\VignetteEngine{knitr::rmarkdown}
 ---
-
-```{r style, echo = FALSE, results = 'asis'}
-BiocStyle::markdown()
-```
 
 # Overview
 
@@ -54,7 +51,7 @@ guide appropriate use the of resources.
 Below is an outline of package organization. The files listed are required
 unless otherwise stated. 
 
-`inst/extdata/`
+### `inst/extdata/`
 
 - `metadata.csv`: 
   This file contains the metadata in the format of one row per resource
@@ -65,7 +62,7 @@ unless otherwise stated.
   `AnnotationHubData::readMetadataFromCsv()`. See ?`readMetadataFromCsv` for 
   details.
 
-`inst/scripts/`
+### `inst/scripts/`
 
 - `make-data.R`: 
   A script describing the steps involved in making the data object(s). This
@@ -80,32 +77,35 @@ unless otherwise stated.
   and data types.  `readMetadataFromCsv()` can be used to validate the 
   metadata.csv file before submitting the package.
 
-`vignettes/`
+### `vignettes/`
 
 - One or more vignettes describing analysis workflows. 
 
-`R/`
+### `R/`
   
 - `zzz.R`: Optional. You can include a `.onLoad()` function in a zzz.R file that
   exports each resource name (i.e., title) into a function. This allows the data
   to be loaded by name, e.g., `resouce123()`.
 
-        .onLoad <- function(libname, pkgname) {
-            fl <- system.file("extdata", "metadata.csv", package=pkgname)
-            titles <- read.csv(fl, stringsAsFactors=FALSE)$Title
-            createHubAccessors(pkgname, titles)
-        }
+    ```{r, eval=FALSE}
+    .onLoad <- function(libname, pkgname) {
+        fl <- system.file("extdata", "metadata.csv", package=pkgname)
+        titles <- read.csv(fl, stringsAsFactors=FALSE)$Title
+        createHubAccessors(pkgname, titles)
+    }
+    ```
 
-    Internal detail is in `ExperimentHub::createHubAccessors()` and
-    `ExperimentHub:::.hubAccessorFactory()` funtions. The resource-named
-    function has a single 'metadata' argument. When metadata=TRUE, the metadata
-    are loaded (equivalent to single-bracket method on an ExperimentHub object)
-    and when FALSE the full resource is loaded (equivalent to double-bracket
+    `ExperimentHub::createHubAccessors()` and
+    `ExperimentHub:::.hubAccessorFactory()` provide internal
+    detail. The resource-named function has a single 'metadata'
+    argument. When metadata=TRUE, the metadata are loaded (equivalent
+    to single-bracket method on an ExperimentHub object) and when
+    FALSE the full resource is loaded (equivalent to double-bracket
     method).
 
 - `R/*.R`: Optional. Functions to enhance data exploration.
 
-`man/`
+### `man/`
 
 - package man page: 
   The package man page serves as a landing point and should briefly describe
@@ -121,20 +121,23 @@ unless otherwise stated.
   Data can be accessed via the standard ExperimentHub interface with
   single and double-bracket methods, e.g., 
   
-        library(ExperimentHub)
-        eh <- ExperimentHub()
-        myfiles <- query(eh, "PACKAGENAME")
-        myfiles[[1]]        ## load the first resource in the list
-        myfiles[["EH123"]]  ## load by EH id
+    ```{r, eval=FALSE}
+    library(ExperimentHub)
+    eh <- ExperimentHub()
+    myfiles <- query(eh, "PACKAGENAME")
+    myfiles[[1]]        ## load the first resource in the list
+    myfiles[["EH123"]]  ## load by EH id
+    ```
   
 - If a `.onLoad()` function is used to export each resource as a function 
   also document that method of loading, e.g.,
 
-        resourceA(meta = FALSE) ## data are loaded
-        resourceA(meta = TRUE)  ## metadata are displayed
+    ```{r, eval=FALSE}
+    resourceA(meta = FALSE) ## data are loaded
+    resourceA(meta = TRUE)  ## metadata are displayed
+    ```
 
-
-`DESCRIPTION` / `NAMESPACE`
+### `DESCRIPTION` / `NAMESPACE`
 
 - The package should depend on and fully import ExperimentHub. If using the
   suggested `.onLoad()` function, import the utils package in the DESCRIPTION
