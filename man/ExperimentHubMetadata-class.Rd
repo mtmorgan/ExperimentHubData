@@ -56,10 +56,6 @@ ExperimentHubMetadata(ExperimentHubRoot=NA_character_,
   \code{addResources} is a function used by the Bioconductor Core team when
   adding new metadata records to the production database.
   \code{makeExperimentHubMetadata} and the low-level helper
-  \code{readMetadataFromCsv} are useful for developers when designing and
-  testing new metadata in the metadata.csv file of their software package.
-  Details on creating a package for ExperimentHub are in the ExperimentHubData
-  vignette (\code{browseVignettes("ExperimentHubData")}).
 }
 
 \arguments{
