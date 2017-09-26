@@ -39,7 +39,7 @@
 \seealso{
   \itemize{
     \item \code{\link{addResources}}
-    \item \code{\link[AnnotationHubData]{readMetadataFromCsv}}
+    \item \code{\link[AnnotationHub]{readMetadataFromCsv}}
     \item \code{\link{ExperimentHubMetadata}} class
   }
 }
