@@ -7,7 +7,7 @@
 ##        locally (to find the file) and remotely (to store the file).
 ## NOTE: This function replaces AnnotationHubData::updateResources().
 ##       An alternative is to make updateResources() more flexible ...
-addResources <- function(pathToPackage, insert=FALSE, ...)
+addResources <- function(pathToPackage, fileName=character(), insert=FALSE, ...)
 {
     if (insert) {
         url <- getOption("EXPERIMENT_HUB_SERVER_POST_URL")
@@ -16,10 +16,11 @@ addResources <- function(pathToPackage, insert=FALSE, ...)
                         "EXPERIMENT_HUB_SERVER_POST_URL must be set ",
                         "in the global environment or .Rprofile"))
     }
-
+    
     ## generate metadata
-    message("generating metadata ...") 
-    metadata <- makeExperimentHubMetadata(pathToPackage)
+    message("generating metadata ...")
+    stopifnot(length(fileName) <= 1)
+    metadata <- makeExperimentHubMetadata(pathToPackage, fileName=fileName)
 
     ## duplicates and pre-existing records
     all <- sapply(metadata, function(x) basename(x@RDataPath))

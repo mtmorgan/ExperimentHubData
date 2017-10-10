@@ -6,6 +6,8 @@ MODIFICATIONS
     o Moved vignette to ExperimentHub as more practical use there; created new
     vignette
 
+    o Allow specification of metadata file in inst/extdata to be used
+
 BUG FIXES
 
     o updated addResources

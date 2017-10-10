@@ -17,12 +17,13 @@ setClass("ExperimentHubMetadata",
 ## Constructor
 ## 
 
-makeExperimentHubMetadata <- function(pathToPackage) 
+makeExperimentHubMetadata <- function(pathToPackage, fileName=character()) 
 {
     ## Differences from makeAnnotationHubMetadata:
     ## - package put in PreparerClass slot
     ## - Tags are biocViews
-    meta <- readMetadataFromCsv(pathToPackage)
+    stopifnot(length(fileName) <= 1)
+    meta <- readMetadataFromCsv(pathToPackage, fileName=fileName)
     package <- basename(pathToPackage)
     meta$PreparerClass <- package 
 
@@ -88,17 +89,6 @@ ExperimentHubMetadata <-
     if(!(isSingleInteger(TaxonomyId) || is.na(TaxonomyId)))
         stop(paste0("ExperimentHubMetdata objects can contain",
                     " only one taxonomy ID or NA"))
-
-    ## FIXME: do we need to handle the case of multiple files per resource?
-    if(any(is.na(RDataPath)))
-        stop(paste0("ExperimentHubMetdata RDataPath slot cannot contain NAs"))
-
-    if (missing(RDataPath)) { 
-        ## Add two characters: one for substr starting AT clipChars
-        ## and one for extra slash
-        clipChars <- nchar(Location_Prefix) + 2 
-        RDataPath <- substr(SourceUrl, clipChars, nchar(SourceUrl))
-    }
 
     RDataDateAdded <-
         as.POSIXct(strsplit(

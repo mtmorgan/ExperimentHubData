@@ -9,7 +9,7 @@
 }
 
 \usage{
-addResources(pathToPackage, insert = FALSE, ...)
+addResources(pathToPackage, fileName=character(), insert = FALSE, ...)
 }
 
 \details{
@@ -31,6 +31,10 @@ addResources(pathToPackage, insert = FALSE, ...)
 \arguments{
   \item{pathToPackage}{
     Full path to data package including package name.
+  }
+  \item{fileName}{Name of single metadata file located in
+  "inst/extdata". If none is provided the function looks for a file
+  named "metadata.csv".
   }
   \item{insert}{
     A \code{logical} to control if metadata are inserted in the ExperimentHub
@@ -56,6 +60,7 @@ addResources(pathToPackage, insert = FALSE, ...)
   \itemize{
     \item \link{ExperimentHubMetadata}
     \item \link[AnnotationHubData]{AnnotationHubMetadata}
+    \item \code{\link[AnnotationHub]{readMetadataFromCsv}}
   }
 }
 

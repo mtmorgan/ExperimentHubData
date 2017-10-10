@@ -12,12 +12,16 @@
 }
 
 \usage{
-  makeExperimentHubMetadata(pathToPackage)
+  makeExperimentHubMetadata(pathToPackage, fileName=character())
 }
 
 \arguments{
   \item{pathToPackage}{
     Full path to data package including the package name; no trailing slash
+  }
+  \item{fileName}{Name of single metadata file located in
+  "inst/extdata". If none is provided the function looks for a file
+  named "metadata.csv".
   }
 }
 
