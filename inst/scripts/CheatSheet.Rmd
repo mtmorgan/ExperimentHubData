@@ -515,9 +515,9 @@ sudo docker-compose up
 3. In a new terminal start R:
 
 ```
-options(EXPERIMENT_HUB_SERVER_POST_URL="http://localhost:3000/resource")
-options(EXPERIMENT_HUB_URL="http://localhost:3000")
-library(AnnotationHubData)
+options(EXPERIMENT_HUB_SERVER_POST_URL="http://localhost:4000/resource")
+options(EXPERIMENT_HUB_URL="http://localhost:4000")
+library(ExperimentHubData)
 
 # run approprate makeExperimentHubMetadata() call and following if necessary
 #url <- getOption("EXPERIMENT_HUB_SERVER_POST_URL")
