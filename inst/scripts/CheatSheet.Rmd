@@ -519,7 +519,8 @@ options(EXPERIMENT_HUB_SERVER_POST_URL="http://localhost:4000/resource")
 options(EXPERIMENT_HUB_URL="http://localhost:4000")
 library(ExperimentHubData)
 
-# run approprate makeExperimentHubMetadata() call and following if necessary
+# run approprate makeExperimentHubMetadata() call and following if necessary 
+# or addResources  - note using addResources prevents duplicated entries!
 #url <- getOption("EXPERIMENT_HUB_SERVER_POST_URL")
 #pushMetadata(meta, url)
 ```
