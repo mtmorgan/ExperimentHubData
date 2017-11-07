@@ -174,7 +174,6 @@ ExperimentHubMetadata(ExperimentHubRoot=NA_character_,
   \itemize{
     \item \link{addResources}
     \item \link[ExperimentHubData]{makeExperimentHubMetadata}
-    \item \link[AnnotationHub]{readMetadataFromCsv}
   }
 }
 

@@ -23,7 +23,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
     ## - package put in PreparerClass slot
     ## - Tags are biocViews
     stopifnot(length(fileName) <= 1)
-    meta <- readMetadataFromCsv(pathToPackage, fileName=fileName)
+    meta <- AnnotationHubData:::.readMetadataFromCsv(pathToPackage, fileName=fileName)
     package <- basename(pathToPackage)
     meta$PreparerClass <- package 
 

@@ -60,7 +60,7 @@ addResources(pathToPackage, fileName=character(), insert = FALSE, ...)
   \itemize{
     \item \link{ExperimentHubMetadata}
     \item \link[AnnotationHubData]{AnnotationHubMetadata}
-    \item \code{\link[AnnotationHub]{readMetadataFromCsv}}
+    \item \link{makeExperimentHubMetadata}
   }
 }
 
