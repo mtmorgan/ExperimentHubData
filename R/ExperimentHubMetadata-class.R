@@ -15,9 +15,9 @@ setClass("ExperimentHubMetadata",
 
 ## -----------------------------------------------------------------------------
 ## Constructor
-## 
+##
 
-makeExperimentHubMetadata <- function(pathToPackage, fileName=character()) 
+makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
 {
     ## Differences from makeAnnotationHubMetadata:
     ## - package put in PreparerClass slot
@@ -25,49 +25,49 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
     stopifnot(length(fileName) <= 1)
     meta <- AnnotationHubData:::.readMetadataFromCsv(pathToPackage, fileName=fileName)
     package <- basename(pathToPackage)
-    meta$PreparerClass <- package 
+    meta$PreparerClass <- package
 
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
     .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
     lapply(seq_len(nrow(meta)),
         function(x) {
-            with(meta[x,], 
-                 ExperimentHubMetadata(Title=Title, Description=Description, 
-                                       BiocVersion=BiocVersion, Genome=Genome, 
-                                       SourceType=SourceType, 
+            with(meta[x,],
+                 ExperimentHubMetadata(Title=Title, Description=Description,
+                                       BiocVersion=BiocVersion, Genome=Genome,
+                                       SourceType=SourceType,
                                        SourceUrl=SourceUrl,
-                                       SourceVersion=SourceVersion, 
+                                       SourceVersion=SourceVersion,
                                        Species=Species, TaxonomyId=TaxonomyId,
-                                       Coordinate_1_based=Coordinate_1_based, 
+                                       Coordinate_1_based=Coordinate_1_based,
                                        DataProvider=DataProvider,
-                                       Maintainer=Maintainer, 
-                                       RDataClass=RDataClass, Tags=.tags, 
-                                       RDataDateAdded=RDataDateAdded, 
-                                       RDataPath=RDataPath, 
+                                       Maintainer=Maintainer,
+                                       RDataClass=RDataClass, Tags=.tags,
+                                       RDataDateAdded=RDataDateAdded,
+                                       RDataPath=RDataPath,
                                        DispatchClass=DispatchClass,
-                                       PreparerClass=PreparerClass)) 
+                                       PreparerClass=PreparerClass))
         }
     )
 }
 
 ExperimentHubMetadata <-
-    function(ExperimentHubRoot=NA_character_, 
+    function(ExperimentHubRoot=NA_character_,
         BiocVersion=biocVersion(),
         SourceUrl=NA_character_,   ## not necessary because no downloads
-        SourceType=NA_character_, 
-        SourceVersion=NA_character_, 
-        SourceLastModifiedDate=as.POSIXct(NA_character_), 
-        SourceMd5=NA_character_, 
+        SourceType=NA_character_,
+        SourceVersion=NA_character_,
+        SourceLastModifiedDate=as.POSIXct(NA_character_),
+        SourceMd5=NA_character_,
         SourceSize=NA_real_,
-        DataProvider=NA_character_, 
-        Title=NA_character_, 
+        DataProvider=NA_character_,
+        Title=NA_character_,
         Description=NA_character_,
-        Maintainer=NA_character_, 
-        Species=NA_character_, 
-        TaxonomyId=NA_integer_, 
-        Genome=NA_character_, 
+        Maintainer=NA_character_,
+        Species=NA_character_,
+        TaxonomyId=NA_integer_,
+        Genome=NA_character_,
         Tags=NA_character_,
-        RDataClass=NA_character_, 
+        RDataClass=NA_character_,
         RDataDateAdded=as.POSIXct(NA_character_),
         RDataPath=NA_character_,
         Coordinate_1_based=TRUE,
@@ -78,28 +78,42 @@ ExperimentHubMetadata <-
 {
     ## FIXME: move these checks to a general validity method
     ##        on HubMetadata that can be reused
-    if (is.na(TaxonomyId)) {
+    if (missing(TaxonomyId) | is.na(TaxonomyId)) {
         if (!is.na(Species) &&
             requireNamespace("AnnotationHubData", quietly=TRUE))
             TaxonomyId <- GenomeInfoDb:::.taxonomyId(Species)
     }
-    ## FIXME: where should these coercions be handled?
-    Coordinate_1_based <- as.logical(Coordinate_1_based)
     TaxonomyId <- as.integer(TaxonomyId)
     if(!(isSingleInteger(TaxonomyId) || is.na(TaxonomyId)))
         stop(paste0("ExperimentHubMetdata objects can contain",
                     " only one taxonomy ID or NA"))
 
+    ## FIXME: where should these coercions be handled?
+    # This is already done in readMetadataFromCsv?
+    Coordinate_1_based <- as.logical(Coordinate_1_based)
+
     RDataDateAdded <-
         as.POSIXct(strsplit(
             as.character(RDataDateAdded), " ")[[1]][1], tz="GMT")
 
-    lapply(c(Location_Prefix, RDataClass),
-        AnnotationHubData:::.checkThatSingleStringAndNoCommas) 
-    lapply(c(Genome, Species, SourceType), 
-        AnnotationHubData:::.checkThatSingleStringOrNA)
-    lapply(SourceVersion,
-        AnnotationHubData:::.checkThatSingleStringOrNAAndNoCommas)
+    #
+    # Do the other checks in AnnotationHubData also go here?
+    #
+
+    # Making these consistent with AnnotationHubData
+    #lapply(c(Location_Prefix, RDataClass),
+    #    AnnotationHubData:::.checkThatSingleStringAndNoCommas)
+    #lapply(c(Genome, Species, SourceType),
+    #    AnnotationHubData:::.checkThatSingleStringOrNA)
+    #lapply(SourceVersion,
+    #    AnnotationHubData:::.checkThatSingleStringOrNAAndNoCommas)
+    AnnotationHubData:::.checkThatSingleStringAndNoCommas(SourceType)
+    AnnotationHubData:::.checkThatSingleStringAndNoCommas(Location_Prefix)
+    AnnotationHubData:::.checkThatSingleStringOrNA(Genome)
+    AnnotationHubData:::.checkThatSingleStringOrNA(Species)
+    AnnotationHubData:::.checkThatSingleStringOrNAAndNoCommas(SourceVersion)
+    AnnotationHubData:::.checkRDataClassConsistent(RDataClass)
+    AnnotationHubData:::.checkValidMaintainer(Maintainer)
 
     new("ExperimentHubMetadata",
         ExperimentHubRoot=ExperimentHubRoot,
@@ -124,37 +138,37 @@ ExperimentHubMetadata <-
         Location_Prefix=Location_Prefix,
         DispatchClass=DispatchClass,
         PreparerClass=PreparerClass,
-        ## FIXME: how to determine 
+        ## FIXME: how to determine
         SourceSize=NA_real_,
-        SourceMd5=NA_character_, 
+        SourceMd5=NA_character_,
         SourceLastModifiedDate=as.POSIXct(NA_character_), #from url in AHD
-        ## NOTE: not relevant 
+        ## NOTE: not relevant
         Recipe=NA_character_
     )
 }
 
 ## ------------------------------------------------------------------------------
 ## Getters and setters
-## 
+##
 
 ## TODO
 
 ## -----------------------------------------------------------------------------
-## Validity 
-## 
+## Validity
+##
 
 ## TODO
 
 ## ------------------------------------------------------------------------------
-## show 
-## 
+## show
+##
 
 setMethod("show", "ExperimentHubMetadata",
    function(object)
 {
     cat(class(object), " object: \n", sep='')
     for (slt in c("Title", "Description", "BiocVersion", "Genome",
-                  "Species", "TaxonomyId", "Location_Prefix", 
+                  "Species", "TaxonomyId", "Location_Prefix",
                   "RDataClass", "RDataDateAdded",
                   "RDataPath", "SourceLastModifiedDate", "SourceType",
                   "SourceUrl", "SourceVersion", "Tags", "DispatchClass")) {
