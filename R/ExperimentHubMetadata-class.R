@@ -81,7 +81,7 @@ ExperimentHubMetadata <-
     if (missing(TaxonomyId) | is.na(TaxonomyId)) {
         if (!is.na(Species) &&
             requireNamespace("GenomeInfoDb", quietly=TRUE))
-            TaxonomyId <- GenomeInfoDb:::.lookup_tax_id_by_organism(Species)
+            TaxonomyId <- GenomeInfoDb:::lookup_tax_id_by_organism(Species)
     }
     TaxonomyId <- as.integer(TaxonomyId)
     if(!(isSingleInteger(TaxonomyId) || is.na(TaxonomyId)))
