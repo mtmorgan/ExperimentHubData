@@ -22,7 +22,7 @@
 
 \usage{
 ExperimentHubMetadata(ExperimentHubRoot=NA_character_, 
-        BiocVersion=biocVersion(),
+        BiocVersion=BiocManager::version(),
         SourceUrl=NA_character_, 
         SourceType=NA_character_, 
         SourceVersion=NA_character_, 

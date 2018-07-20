@@ -52,7 +52,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
 
 ExperimentHubMetadata <-
     function(ExperimentHubRoot=NA_character_,
-        BiocVersion=biocVersion(),
+        BiocVersion=BiocManager::version(),
         SourceUrl=NA_character_,   ## not necessary because no downloads
         SourceType=NA_character_,
         SourceVersion=NA_character_,

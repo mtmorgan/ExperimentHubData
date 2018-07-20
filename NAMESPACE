@@ -7,7 +7,7 @@ import(ExperimentHub)
 import(AnnotationHubData)
 import(BiocCheck) ## non-exported checkBiocViews()
 
-importFrom(BiocInstaller, biocVersion)
+importFrom(BiocManager, version)
 importFrom(DBI, dbGetQuery, dbDisconnect)
 
 importFrom(curl, new_handle, curl, handle_setopt)
