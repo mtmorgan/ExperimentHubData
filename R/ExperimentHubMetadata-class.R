@@ -29,6 +29,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
 
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
     .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
+    if (length(.tags) <= 1) stop("Add 2 or more biocViews to your DESCRIPTION")
     lapply(seq_len(nrow(meta)),
         function(x) {
             with(meta[x,],
