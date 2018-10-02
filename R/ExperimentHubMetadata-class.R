@@ -16,12 +16,16 @@ setClass("ExperimentHubMetadata",
 ## -----------------------------------------------------------------------------
 ## Constructor
 ##
+globalVariables(c("BiocVersion", "Coordinate_1_based", "DataProvider",
+                  "Description", "DispatchClass", "Genome", "Location_Prefix",
+                  "Maintainer", "RDataClass", "RDataDateAdded", "RDataPath",
+                  "SourceType", "SourceUrl", "SourceVersion", "Species",
+                  "TaxonomyId", "Title", "PreparerClass"))
 
 makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
 {
     ## Differences from makeAnnotationHubMetadata:
     ## - package put in PreparerClass slot
-    ## - Tags are biocViews
     stopifnot(length(fileName) <= 1)
     meta <- AnnotationHubData:::.readMetadataFromCsv(pathToPackage, fileName=fileName)
     package <- basename(pathToPackage)
@@ -30,6 +34,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
     .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
     if (length(.tags) <= 1) stop("Add 2 or more biocViews to your DESCRIPTION")
+    AnnotationHubData:::.checkValidViews(.tags, "ExperimentData")
     lapply(seq_len(nrow(meta)),
         function(x) {
             with(meta[x,],
@@ -83,31 +88,24 @@ ExperimentHubMetadata <-
         if (!is.na(Species) &&
             requireNamespace("GenomeInfoDb", quietly=TRUE))
             TaxonomyId <- GenomeInfoDb:::lookup_tax_id_by_organism(Species)
+        else
+            TaxonomyId <- NA_integer_
     }
     TaxonomyId <- as.integer(TaxonomyId)
     if(!(isSingleInteger(TaxonomyId) || is.na(TaxonomyId)))
         stop(paste0("ExperimentHubMetdata objects can contain",
                     " only one taxonomy ID or NA"))
 
-    ## FIXME: where should these coercions be handled?
     # This is already done in readMetadataFromCsv?
-    Coordinate_1_based <- as.logical(Coordinate_1_based)
+    #Coordinate_1_based <- as.logical(Coordinate_1_based)
+
+    if (missing(RDataPath))
+        stop("RDataPath must be defined")
 
     RDataDateAdded <-
         as.POSIXct(strsplit(
             as.character(RDataDateAdded), " ")[[1]][1], tz="GMT")
 
-    #
-    # Do the other checks in AnnotationHubData also go here?
-    #
-
-    # Making these consistent with AnnotationHubData
-    #lapply(c(Location_Prefix, RDataClass),
-    #    AnnotationHubData:::.checkThatSingleStringAndNoCommas)
-    #lapply(c(Genome, Species, SourceType),
-    #    AnnotationHubData:::.checkThatSingleStringOrNA)
-    #lapply(SourceVersion,
-    #    AnnotationHubData:::.checkThatSingleStringOrNAAndNoCommas)
     AnnotationHubData:::.checkThatSingleStringAndNoCommas(SourceType)
     AnnotationHubData:::.checkThatSingleStringAndNoCommas(Location_Prefix)
     AnnotationHubData:::.checkThatSingleStringOrNA(Genome)
@@ -148,17 +146,14 @@ ExperimentHubMetadata <-
     )
 }
 
-## ------------------------------------------------------------------------------
-## Getters and setters
-##
-
-## TODO
 
 ## -----------------------------------------------------------------------------
 ## Validity
 ##
+setValidity("ExperimentHubMetadata",function(object) {
 
-## TODO
+    AnnotationHubData:::.ValidHubs(object)
+})
 
 ## ------------------------------------------------------------------------------
 ## show
