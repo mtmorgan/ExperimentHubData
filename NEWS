@@ -1,3 +1,17 @@
+CHANGES IN VERSION 1.7.0
+------------------------
+
+NEW FEATURES
+
+    o There are now validity checks for tags (valid biocViews in DESCRIPTION),
+    RDataPath (must be defined), SourceUrls (must be defined and indicate url),
+    genome (valid length), sourcetype (from list of valid entries), species and
+    taxonomy id (validated from GenomeInfoDbData)
+
+MODIFICATIONS
+
+   o Modified to use BiocManager instead of BiocInstaller
+
 CHANGES IN VERSION 1.4.0
 ------------------------
 
@@ -15,4 +29,4 @@ BUG FIXES
 VERSION 1.0.0
 ------------------------
 
-Package added to release BioC 3.4
+    o Package added to release BioC 3.4
