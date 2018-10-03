@@ -31,6 +31,9 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
     package <- basename(pathToPackage)
     meta$PreparerClass <- package
 
+    if ("tags" %in% tolower(names(meta)))
+        message("Tags are specified by biocViews entry in the",
+                " DESCRIPTION file.\nIgnoring Tags in the metadata file.")
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
     .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
     if (length(.tags) <= 1) stop("Add 2 or more biocViews to your DESCRIPTION")
