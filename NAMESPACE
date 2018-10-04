@@ -6,7 +6,9 @@ import(httr)
 import(ExperimentHub)
 import(AnnotationHubData)
 import(BiocCheck) ## non-exported checkBiocViews()
+import(biocViews)
 
+importFrom(graph, nodes)
 importFrom(BiocManager, version)
 importFrom(DBI, dbGetQuery, dbDisconnect)
 
