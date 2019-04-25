@@ -38,6 +38,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
     .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
     if (length(.tags) <= 1) stop("Add 2 or more biocViews to your DESCRIPTION")
     .checkValidViews(.tags, "ExperimentData")
+    .RDataPaths <- meta$RDataPath
     lapply(seq_len(nrow(meta)),
         function(x) {
             with(meta[x,],
@@ -52,7 +53,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
                                        Maintainer=Maintainer,
                                        RDataClass=RDataClass, Tags=.tags,
                                        RDataDateAdded=RDataDateAdded,
-                                       RDataPath=RDataPath,
+                                       RDataPath=.RDataPaths[[x]],
                                        DispatchClass=DispatchClass,
                                        PreparerClass=PreparerClass))
         }
@@ -147,6 +148,7 @@ ExperimentHubMetadata <-
     AnnotationHubData:::.checkThatSingleStringOrNAAndNoCommas(SourceVersion)
     AnnotationHubData:::.checkRDataClassConsistent(RDataClass)
     AnnotationHubData:::.checkValidMaintainer(Maintainer)
+    AnnotationHubData:::.checkFileLengths(RDataPath, DispatchClass)
 
     new("ExperimentHubMetadata",
         ExperimentHubRoot=ExperimentHubRoot,

@@ -1,3 +1,11 @@
+CHANGES IN VERSION 1.9.0
+------------------------
+
+NEW FEATURES
+
+    o Added ability to have multiple RDataPaths associated with single hub
+    id for strongly associated files (like bam and its bai index file)
+
 CHANGES IN VERSION 1.7.0
 ------------------------
 

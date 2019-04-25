@@ -66,7 +66,9 @@
 	\item Genome: \code{character(1)}. Genome.
 
 	\item SourceType: \code{character(1)}. Format of original data, e.g., FASTA,
-	      BAM, BigWig, etc.
+	BAM, BigWig, etc. \code{getValidSourceTypes()} list currently
+	acceptable values. If nothing seems appropiate for your data
+	reach out to maintainer@bioconductor.org.
 
 	\item SourceUrl: \code{character(1)}. Optional location of original
 	      data files. Multiple urls should be provided as a comma separated
@@ -74,9 +76,13 @@
 
 	\item SourceVersion: \code{character(1)}. Version of original data.
 
-	\item Species: \code{character(1)}. Species.
+	\item Species: \code{character(1)}. Species.For help on valid
+	species see \code{getSpeciesList, validSpecies, or suggestSpecies.}
 
-	\item TaxonomyId: \code{character(1)}. Taxonomy ID.
+	\item TaxonomyId: \code{character(1)}. Taxonomy ID. There are
+	checks for valid taxonomyId given the Species which produce
+	warnings. See GenomeInfoDb::loadTaxonomyDb() for full validation
+	table.
 
 	\item Coordinate_1_based: \code{logical}. TRUE if data are 1-based.
 
@@ -103,7 +109,12 @@
 	      AnnotationHubResource-class.R defines SQLiteFileResource so
 	      the DispatchClass would be SQLiteFile. Contact
 	      maintainer@bioconductor.org if you are not sure which class
-	      to use.
+	      to use. The function
+	      \code{AnnotationHub::DispatchClassList()} will output a
+	      matrix of currently implemented DispatchClass and brief
+	      description of utility. If a predefine class does not seem
+	      appropriate contact maintainer@bioconductor.org.
+
 
 	\item Location_Prefix: \code{character(1)}. Do not include this field
 	      if data are stored in the Bioconductor AWS S3; it will be
@@ -112,14 +123,18 @@
 	      If data will be accessed from a location other than AWS S3
 	      this field should be the base url.
 
-	\item RDataPath: \code{character(1)}.This field should be the
+	\item RDataPath: \code{character()}.This field should be the
 	      remainder of the path to the resource. The
 	      \code{Location_Prefix} will be prepended to
 	      \code{RDataPath} for the full path to the resource.
 	      If the resource is stored in Bioconductor's AWS S3
 	      buckets, it should start with the name of the package associated
 	      with the metadata and should not start with a leading
-	      slash. It should include the resource file name.
+	      slash. It should include the resource file name. For
+	      strongly associated files, like a bam file and its index
+	      file, the two files should be separates with a colon
+	      \code{:}. This will link a single hub id with the multiple files.
+
 
        \item Tags: \code{character() vector}.
 	     \sQuote{Tags} are search terms used to define a subset of

@@ -349,12 +349,14 @@ file. Briefly, a description of the metadata columns required:
   in the Bioconductor AWS S3; it will be generated automatically. If data will
   be accessed from a location other than AWS S3 this field should be the base
   url.
-* RDataPath: 'character(1)'.This field should be the remainder of the path to
+* RDataPath: 'character()'.This field should be the remainder of the path to
   the resource. The 'Location_Prefix' will be prepended to 'RDataPath' for the
   full path to the resource.  If the resource is stored in Bioconductor's AWS S3
   buckets, it should start with the name of the package associated with the
   metadata and should not start with a leading slash. It should include the
-  resource file name.
+  resource file name. For strongly associated files, like a bam file and its
+  index file, the two files should be separates with a colon. This will link a
+  single hub id with the multiple files.
 * Tags: 'character() vector'.  'Tags' are search terms used to define a subset
   of resources in a 'Hub' object, e.g, in a call to 'query'.
 
