@@ -39,6 +39,12 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
     if (length(.tags) <= 1) stop("Add 2 or more biocViews to your DESCRIPTION")
     .checkValidViews(.tags, "ExperimentData")
     .RDataPaths <- meta$RDataPath
+    .Location_Prefix <-
+        if("Location_Prefix" %in% names(meta)){
+            meta$Location_Prefix
+        }else{
+            'http://s3.amazonaws.com/experimenthub/'
+    }
     lapply(seq_len(nrow(meta)),
         function(x) {
             with(meta[x,],
@@ -55,7 +61,8 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
                                        RDataDateAdded=RDataDateAdded,
                                        RDataPath=.RDataPaths[[x]],
                                        DispatchClass=DispatchClass,
-                                       PreparerClass=PreparerClass))
+                                       PreparerClass=PreparerClass,
+                                       Location_Prefix=.Location_Prefix[[x]]))
         }
     )
 }
