@@ -49,6 +49,16 @@ options(AH_SERVER_POST_URL="http://localhost:3000/resource")
 options(ANNOTATION_HUB_URL="http://localhost:3000")
 library(AnnotationHubData)
 # change the appropraite release number
+# Since this grabs the file and converts on the fly
+# There is actually no need to run with metadataOnly=FALSE
+# 
+# This periodically fails. We realized after a certain number
+# of subsequent hits to ensembl ftp site, the site starts asking
+# for a username:password or simply blocks entirely
+# We have tried increasing the sleep time in between failed attempts
+# with a max retry of 3.  Normally this function will run completely
+# after 1-3 attempts.  
+#  In the future maybe consider adding in conditional userpwd argumnet to getURL
 meta <- updateResources(getwd(),
 			  BiocVersion = "3.6",
 			  preparerClasses = "EnsemblGtfImportPreparer",
