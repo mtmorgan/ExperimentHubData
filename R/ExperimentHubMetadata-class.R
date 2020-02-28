@@ -154,6 +154,8 @@ ExperimentHubMetadata <-
     AnnotationHubData:::.checkRDataClassConsistent(RDataClass)
     AnnotationHubData:::.checkValidMaintainer(Maintainer)
     AnnotationHubData:::.checkFileLengths(RDataPath, DispatchClass)
+    AnnotationHubData:::.checkValidSingleString(Title)
+    AnnotationHubData:::.checkValidSingleString(Description)
 
     new("ExperimentHubMetadata",
         ExperimentHubRoot=ExperimentHubRoot,

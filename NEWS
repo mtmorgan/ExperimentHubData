@@ -1,3 +1,11 @@
+CHANGES IN VERSION 1.13.0
+------------------------
+
+MODIFICATIONS
+
+    o 1.13.1 add check for valid Title and Description in metadata file. It
+    should not be empty or NA
+
 CHANGES IN VERSION 1.9.0
 ------------------------
 
