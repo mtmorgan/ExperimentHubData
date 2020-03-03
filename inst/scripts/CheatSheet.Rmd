@@ -245,7 +245,8 @@ sudo docker exec annotationhub_annotationhub_1 bash /bin/backup_db.sh
 
 sudo docker exec annotationhub_docker_annotationhub_1 bash /bin/backup_db.sh
 ```
-6. If satisfied, copy this file to annotationhub.bioconductor.org and follow
+
+7. If satisfied, copy this file to annotationhub.bioconductor.org and follow
 instructions for updating production database
 
 
