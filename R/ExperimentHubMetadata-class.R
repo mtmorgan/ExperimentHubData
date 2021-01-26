@@ -37,7 +37,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
     .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
     if (length(.tags) <= 1) stop("Add 2 or more biocViews to your DESCRIPTION")
-    .checkValidViews(.tags, "ExperimentData")
+    AnnotationHubData:::.checkValidViews(.tags)
     .RDataPaths <- meta$RDataPath
     .Location_Prefix <- meta$Location_Prefix
     if (any(.Location_Prefix %in% "http://s3.amazonaws.com/annotationhub/")){
@@ -64,36 +64,6 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
         }
     )
 }
-
-
-.checkValidViews <- function(views, repo){
-
-    msg = list()
-    biocViewsVocab <- NULL
-    data("biocViewsVocab", package="biocViews", envir=environment())
-    # check all valid terms
-    if (!all(views %in% nodes(biocViewsVocab))){
-        badViews <- views[!(views %in% graph::nodes(biocViewsVocab))]
-        badViewsVec <- paste(badViews, collapse=", ")
-        msg["invalid"] = paste0("Invalid biocViews term[s].\n    ", badViewsVec, "\n")
-    }
-    # check all come from same biocViews main category
-    parents <- unlist(lapply(views, BiocCheck:::getParent, biocViewsVocab), use.names=FALSE)
-    if (!all(parents == repo))
-        msg["Category"] = paste0("All biocViews terms must come from the ", repo, " category.\n")
-    # check that hub term present
-    if (repo == "AnnotationData" || repo == "ExperimentData"){
-        repo = paste0(gsub(repo, pattern="Data", replacement=""), "Hub")
-        if (!(repo %in% views))
-            msg["Hub"] = paste0("Please add ", repo, " to biocViews list in DESCRIPTION.\n")
-    }
-    if (length(msg) != 0){
-        myfunction <- function(index, msg){paste0("[", index, "] ", msg[index])}
-        fmt_msg <- unlist(lapply(seq_along(msg), msg = msg, FUN=myfunction))
-        stop("\n",fmt_msg)
-    }
-}
-
 
 
 ExperimentHubMetadata <-
