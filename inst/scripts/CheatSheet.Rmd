@@ -47,15 +47,25 @@ sudo docker-compose up
 ```
 options(AH_SERVER_POST_URL="http://localhost:3000/resource")
 options(ANNOTATION_HUB_URL="http://localhost:3000")
+url <- getOption("AH_SERVER_POST_URL")
 library(AnnotationHubData)
 # change the appropraite release number
+# Since this grabs the file and converts on the fly
+# There is actually no need to run with metadataOnly=FALSE
+# 
+# This periodically fails. We realized after a certain number
+# of subsequent hits to ensembl ftp site, the site starts asking
+# for a username:password or simply blocks entirely
+# We have tried increasing the sleep time in between failed attempts
+# with a max retry of 3.  Normally this function will run completely
+# after 1-3 attempts.  
+#  In the future maybe consider adding in conditional userpwd argumnet to getURL
 meta <- updateResources(getwd(),
 			  BiocVersion = "3.6",
 			  preparerClasses = "EnsemblGtfImportPreparer",
 			  metadataOnly = TRUE, insert = FALSE,
 			  justRunUnitTest = FALSE, release = "89")
 # test/check meta
-url <- getOption("AH_SERVER_POST_URL")
 pushMetadata(meta, url)
 
 # you could rerun updateResources with insert=TRUE to do the push but I like to check resource data
@@ -99,14 +109,46 @@ meta <- updateResources(getwd(),
 			metadataOnly = FALSE, insert = FALSE,
 			justRunUnitTest = FALSE, release = "89")
 
+# Because of the upload the meta will not be an ahm object run again 
+# with metadataOnly=TRUE to save object to copy to local
+meta <- updateResources(getwd(),BiocVersion="3.11", 
+                        preparerClasses="EnsemblTwoBitPreparer", 
+			metadataOnly=TRUE, justRunUnitTest=FALSE, 
+			insert=FALSE, release="99")
 # a suggested step is to save(meta, file="metadataForTwoBit")
 # and scp to local machine
+save(meta, file="TwoBitObj.RData")
 ```
 
 4. Check S3 bucket is being populated.
 5. Once finished close everything and stop EC2 instance
 
 On Local Machine:
+
+Cross check that everything populated correctly. You can check if any failed and needs to be rerun.
+
+```
+meta <- updateResources(getwd(),
+                          BiocVersion = "3.12",
+                          preparerClasses = "EnsemblTwoBitPreparer",
+                          metadataOnly = TRUE, insert = FALSE,
+                          justRunUnitTest = FALSE,
+                          release = "101")
+temp = rep(NA, length(meta))
+for(i in 1:length(meta)){
+       tit = metadata(meta[[i]])$RDataPath
+       temp[i] = tit
+}
+## in a bash shell
+##  aws s3api list-objects --bucket annotationhub --page-size 8000 --query 'Contents[].{Key: Key}' | cut -f2 -d$'\t' | grep '^ensembl/release-101/fasta' > uploadedList.txt 
+upload = readLines("uploadedList.txt")
+paths = setdiff(temp, upload)
+# if any 
+newMeta = meta[match(paths,temp)]
+pushResources(newMeta, uploadToS3 = TRUE, download = TRUE)
+```
+
+
 
 1. Navigate to the AnnotationHub_docker directory
 
@@ -122,6 +164,7 @@ sudo docker-compose up
 ```
 options(AH_SERVER_POST_URL="http://localhost:3000/resource")
 options(ANNOTATION_HUB_URL="http://localhost:3000")
+url <- getOption("AH_SERVER_POST_URL")
 library(AnnotationHubData)
 
 # option 1:
@@ -136,7 +179,6 @@ meta <- updateResources(getwd(),
 # if you saved the meta from the EC2 instance
 load("metadataForTwoBit")
 
-url <- getOption("AH_SERVER_POST_URL")
 pushMetadata(meta, url)
 
 # you could rerun updateResources with insert=TRUE to do the push but I like to check resource data
@@ -213,18 +255,30 @@ sudo docker-compose up
 options(AH_SERVER_POST_URL="http://localhost:3000/resource")
 options(ANNOTATION_HUB_URL="http://localhost:3000")
 library(AnnotationHubData)
+url <- getOption("AH_SERVER_POST_URL")
 
 # run approprate makeAnnotationHubMetadata() call and
-#url <- getOption("AH_SERVER_POST_URL")
-#pushMetadata(meta, url)
+#pushMetadata(meta[[1]], url)
 ```
 4. exit R
 
-5. Convert db to sqlite (puts the file in the data/ directory)
+5. Test
+From the list of dockers running `sudo docker ps` find the process with `db` in 
+the name. Example `test_db2`. Connect to the container with 
+`sudo docker exec -ti test_db bash`. Log into mysql with `mysql -p -u ahuser`
+(The password will be the same as the exported MYSQL_REMOTE_PASSWORD). Explore 
+with mysql commands like `select * from resources order by id desc limit 5;`
+
+6. Convert db to sqlite (puts the file in the data/ directory)
+Which command to run to conver the db to sqlite will depend on the name of the 
+process, but it should be one of the following:
 ```
 sudo docker exec annotationhub_annotationhub_1 bash /bin/backup_db.sh
+
+sudo docker exec annotationhub_docker_annotationhub_1 bash /bin/backup_db.sh
 ```
-6. If satisfied, copy this file to annotationhub.bioconductor.org and follow
+
+7. If satisfied, copy this file to annotationhub.bioconductor.org and follow
 instructions for updating production database
 
 
@@ -264,6 +318,7 @@ sudo docker-compose up
 ```
 options(AH_SERVER_POST_URL="http://localhost:3000/resource")
 options(ANNOTATION_HUB_URL="http://localhost:3000")
+url <- getOption("AH_SERVER_POST_URL")
 library(AnnotationHubData)
 
 # see the man page for clarification on testing and actively pushing
@@ -276,7 +331,6 @@ meta <- updateResources(getwd(),
 			downloadOrgDbs=TRUE)
 # downloadOrgDbs can be FALSE for subsequent runs
 
-url <- getOption("AH_SERVER_POST_URL")
 pushMetadata(meta, url)
 ```
 4. exit R
@@ -329,6 +383,7 @@ sudo docker-compose up
 ```
 options(AH_SERVER_POST_URL="http://localhost:3000/resource")
 options(ANNOTATION_HUB_URL="http://localhost:3000")
+url <- getOption("AH_SERVER_POST_URL")
 library(AnnotationHubData)
 
 # see the man page for clarification on testing and actively pushing
@@ -341,7 +396,6 @@ meta <- updateResources(getwd(),
 			downloadTxDbs=TRUE)
 # downloadTxDbs can be FALSE for subsequent runs
 
-url <- getOption("AH_SERVER_POST_URL")
 pushMetadata(meta, url)
 ```
 4. exit R
@@ -365,7 +419,10 @@ table(mcols(query(hub, "TxDb"))$rdatadateadded)
 
 This code generates ~1000 non-standard
 OrgDb sqlite files from ucsc. These are less comprehensive and the
-standard OrgDb packages. It's best to run this on an EC2 instance.
+standard OrgDb packages. It's best to run this on an EC2 instance. 
+You can run it locally if your machine has enough space to download 
+the files from NCBI but keep in mind this code takes several hours to run. 
+
 
 The BiocVersion should be whatever the next release version will be,
 the current devel soon to be release. The
@@ -444,6 +501,7 @@ sudo docker-compose up
 ```
 options(AH_SERVER_POST_URL="http://localhost:3000/resource")
 options(ANNOTATION_HUB_URL="http://localhost:3000")
+url <- getOption("AH_SERVER_POST_URL")
 library(AnnotationHubData)
 
 # option 1:
@@ -458,7 +516,6 @@ meta <- updateResources(getwd(),
 # if you saved the meta from the EC2 instance
 load("metadataForTwoBit")
 
-url <- getOption("AH_SERVER_POST_URL")
 pushMetadata(meta, url)
 
 # you could rerun updateResources with insert=TRUE to do the push but I like to check resource data
@@ -512,9 +569,9 @@ metadata.csv is properly formatted, run `makeExperimentHubMetadata()`.
  Info on [ExperimentHub docker](https://github.com/Bioconductor/ExperimentHub_docker)
  and how to set up docker directory.
 
-When satisfied start the AnnotationHub docker and add resource to docker.
+When satisfied start the ExperimentHub docker and add resource to docker.
 
-1. Navigate to the AnnotationHub_docker directory
+1. Navigate to the ExperimentHub_docker directory
 
 2. Start the docker:
 
@@ -529,10 +586,10 @@ sudo docker-compose up
 options(EXPERIMENT_HUB_SERVER_POST_URL="http://localhost:4000/resource")
 options(EXPERIMENT_HUB_URL="http://localhost:4000")
 library(ExperimentHubData)
+url <- getOption("EXPERIMENT_HUB_SERVER_POST_URL")
 
 # run approprate makeExperimentHubMetadata() call and following if necessary
 # or addResources  - note using addResources prevents duplicated entries!
-#url <- getOption("EXPERIMENT_HUB_SERVER_POST_URL")
 #pushMetadata(meta, url)
 ```
 
@@ -546,8 +603,12 @@ the name. Example `test_db1`. Connect to the container with
 with mysql commands like `select * from resources order by id desc limit 5;`
 
 6. Convert db to sqlite (puts the file in the data/ directory)
+Which command to run to convert the db to sqlite will depend on the name of the 
+process, but it should be one of the following:
 ```
 sudo docker exec experimenthubdocker_experimenthub_1 bash /bin/backup_db.sh
+
+sudo docker exec experimenthub_docker_experimenthub_1 bash /bin/backup_db.sh
 ```
 7. If satisfied, copy this file to annotationhub.bioconductor.org and follow
 instructions for updating production database
