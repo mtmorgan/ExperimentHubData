@@ -24,20 +24,51 @@ globalVariables(c("BiocVersion", "Coordinate_1_based", "DataProvider",
 
 makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
 {
-    ## Differences from makeAnnotationHubMetadata:
-    ## - package put in PreparerClass slot
     stopifnot(length(fileName) <= 1)
-    meta <- AnnotationHubData:::.readMetadataFromCsv(pathToPackage, fileName=fileName)
-    package <- basename(pathToPackage)
-    meta$PreparerClass <- package
-
-    if ("tags" %in% tolower(names(meta)))
-        message("Tags are specified by biocViews entry in the",
-                " DESCRIPTION file.\nIgnoring Tags in the metadata file.")
     description <- read.dcf(file.path(pathToPackage, "DESCRIPTION"))
-    .tags <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
-    if (length(.tags) <= 1) stop("Add 2 or more biocViews to your DESCRIPTION")
-    AnnotationHubData:::.checkValidViews(.tags)
+    .views <- strsplit(gsub("\\s", "", description[,"biocViews"]), ",")[[1]]
+    if (length(.views) <= 1) stop("Add 2 or more biocViews to your DESCRIPTION. Required: ExperimentHub or ExperimentHubSoftware")
+     AnnotationHubData:::.checkValidViews(.views)
+    ## filter views for common/not useful terms
+    .views = setdiff(.views,
+                     c("ExperimentData","ExperimentHub","SpecimenSource","PackageTypeData",
+                       "Software", "AssayDomain", "BiologicalQuestion","ResearchField", "Technology", "WorkflowStep")
+                     )
+
+
+    meta <- AnnotationHubData:::.readMetadataFromCsv(pathToPackage, fileName=fileName)
+    .package <- unname(description[,"Package"])
+    meta$PreparerClass <- .package
+
+
+    ## check for Tags in metadata
+    ## filter out packageName as already tracked in database with preparerclass
+    if (length(meta$Tags)){
+        .tags <- strsplit(meta$Tags, ":")
+        .tags <- lapply(.tags,
+                        FUN<- function(x, views, packageName){
+                            setdiff(sort(unique(c(x, views))), packageName)},
+                        views = .views, packageName=.package)
+        if (any(unlist(lapply(.tags, FUN=length)) < 1))
+            stop("Add 1 or more Tags to each resource by either\n",
+                 "  adding 'Tags' values to metadata or\n",
+                 "  adding additional meaningful biocViews terms in DESCRIPTION")
+    }else{
+        if (length(.views)){
+            .tags = vector("list", nrow(meta))
+            .tags <- lapply(.tags,
+                            FUN<- function(x, views, packageName){
+                                setdiff(sort(unique(views)), packageName)},
+                            views = .views, packageName=.package)
+        }else{
+            stop("Add 1 or more Tags to each resource by either\n",
+                 "  adding 'Tags' values to metadata or\n",
+                 "  adding additional meaningful biocViews terms in DESCRIPTION")
+        }
+    }
+    
+ 
+    
     .RDataPaths <- meta$RDataPath
     .Location_Prefix <- meta$Location_Prefix
     if (any(.Location_Prefix %in% "http://s3.amazonaws.com/annotationhub/")){
@@ -55,7 +86,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
                                        Coordinate_1_based=Coordinate_1_based,
                                        DataProvider=DataProvider,
                                        Maintainer=Maintainer,
-                                       RDataClass=RDataClass, Tags=.tags,
+                                       RDataClass=RDataClass, Tags=.tags[[x]],
                                        RDataDateAdded=RDataDateAdded,
                                        RDataPath=.RDataPaths[[x]],
                                        DispatchClass=DispatchClass,
