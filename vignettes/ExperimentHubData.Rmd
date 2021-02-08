@@ -20,6 +20,13 @@ publications or experiments.  The resources are generally not files of raw data
 objects such as GRanges, SummarizedExperiment, data.frame etc.  Each resource 
 has associated metadata that can be searched through the `ExperimentHub` client interface.
 
+# Creating an ExperimentHub Package or Converting to an ExperimentHub Package
+
+Please see AnnotationHub Vignette "CreateAHubPackage".
+```
+vignette("CreateAHubPackage", package="AnnotationHub")
+```
+
 # `ExperimentHub_docker`
 
 The [ExperimentHub_docker](https://github.com/Bioconductor/ExperimentHub_docker)
