@@ -51,7 +51,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
                         views = .views, packageName=.package)
         if (any(unlist(lapply(.tags, FUN=length)) < 1))
             stop("Add 1 or more Tags to each resource by either\n",
-                 "  adding 'Tags' values to metadata or\n",
+                 "  adding 'Tags' column to metadata or\n",
                  "  adding additional meaningful biocViews terms in DESCRIPTION")
     }else{
         if (length(.views)){
@@ -60,9 +60,13 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
                             FUN<- function(x, views, packageName){
                                 setdiff(sort(unique(views)), packageName)},
                             views = .views, packageName=.package)
+            if (any(unlist(lapply(.tags, FUN=length)) < 2))
+                stop("Add 2 or more Tags to each resource by either\n",
+                     "  adding 'Tags' column to metadata or\n",
+                     "  adding additional meaningful biocViews terms in DESCRIPTION")
         }else{
             stop("Add 1 or more Tags to each resource by either\n",
-                 "  adding 'Tags' values to metadata or\n",
+                 "  adding 'Tags' column to metadata or\n",
                  "  adding additional meaningful biocViews terms in DESCRIPTION")
         }
     }
