@@ -1,7 +1,7 @@
 Package: ExperimentHubData
 Type: Package
 Title: Add resources to ExperimentHub
-Version: 1.17.3
+Version: 1.17.4
 Authors@R:
     c(person("Bioconductor", "Maintainer",
 	     email="maintainer@bioconductor.org", role="cre"))
@@ -14,6 +14,6 @@ Depends: utils, BiocGenerics (>= 0.15.10), S4Vectors,
     AnnotationHubData (>= 1.21.3)
 Imports: methods, ExperimentHub, BiocManager, DBI, httr,
     curl
-Suggests: GenomeInfoDb, RUnit, knitr, BiocStyle
+Suggests: GenomeInfoDb, RUnit, knitr, BiocStyle, rmarkdown
 biocViews: Infrastructure, DataImport, GUI, ThirdPartyClient
 VignetteBuilder: knitr
