@@ -14,6 +14,6 @@ Depends: utils, BiocGenerics (>= 0.15.10), S4Vectors,
     AnnotationHubData (>= 1.21.3)
 Imports: methods, ExperimentHub, BiocManager, DBI, httr,
     curl
-Suggests: GenomeInfoDb, RUnit, knitr, BiocStyle, rmarkdown
+Suggests: GenomeInfoDb, RUnit, knitr, BiocStyle, rmarkdown, HubPub
 biocViews: Infrastructure, DataImport, GUI, ThirdPartyClient
 VignetteBuilder: knitr

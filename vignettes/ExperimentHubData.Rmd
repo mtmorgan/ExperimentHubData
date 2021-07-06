@@ -22,9 +22,9 @@ has associated metadata that can be searched through the `ExperimentHub` client 
 
 # Creating an ExperimentHub Package or Converting to an ExperimentHub Package
 
-Please see AnnotationHub Vignette "CreateAHubPackage".
+Please see HubPub Vignette "CreateAHubPackage".
 ```
-vignette("CreateAHubPackage", package="AnnotationHub")
+vignette("CreateAHubPackage", package="HubPub")
 ```
 
 # `ExperimentHub_docker`
