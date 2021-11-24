@@ -75,8 +75,8 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
     
     .RDataPaths <- meta$RDataPath
     .Location_Prefix <- meta$Location_Prefix
-    if (any(.Location_Prefix %in% "http://s3.amazonaws.com/annotationhub/")){
-        .Location_Prefix[which(.Location_Prefix == "http://s3.amazonaws.com/annotationhub/")] = 'http://s3.amazonaws.com/experimenthub/'
+    if (any(.Location_Prefix %in% "https://bioconductorhubs.blob.core.windows.net/annotationhub/")){
+        .Location_Prefix[which(.Location_Prefix == "https://bioconductorhubs.blob.core.windows.net/annotationhub/")] = 'https://bioconductorhubs.blob.core.windows.net/experimenthub/'
     }
     lapply(seq_len(nrow(meta)),
         function(x) {
@@ -125,7 +125,7 @@ ExperimentHubMetadata <-
         Notes=NA_character_,
         DispatchClass=NA_character_,
         PreparerClass=NA_character_,
-        Location_Prefix='http://s3.amazonaws.com/experimenthub/')
+        Location_Prefix='https://bioconductorhubs.blob.core.windows.net/experimenthub/')
 {
     ## FIXME: move these checks to a general validity method
     ##        on HubMetadata that can be reused

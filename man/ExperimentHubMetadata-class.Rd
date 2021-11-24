@@ -44,7 +44,7 @@ ExperimentHubMetadata(ExperimentHubRoot=NA_character_,
 	Notes=NA_character_,
 	DispatchClass=NA_character_,
 	PreparerClass=NA_character_,
-	Location_Prefix='http://s3.amazonaws.com/experimenthub/')
+	Location_Prefix='https://bioconductorhubs.blob.core.windows.net/experimenthub/')
 }
 
 \details{
