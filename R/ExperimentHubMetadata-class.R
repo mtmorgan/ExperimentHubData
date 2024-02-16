@@ -70,6 +70,15 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
                  "  adding additional meaningful biocViews terms in DESCRIPTION")
         }
     }
+
+    ## check for Licenses in metadata
+    if (length(meta$Licenses)){
+        if (!AnnotationHubData:::validLicenses(meta$Licenses, verbose=TRUE)){
+            stop("Found one or more invalid licenes")
+        } else {
+            .licenses <- strsplit(meta$Licenses, ":")
+        }
+    }
     
  
     
@@ -91,6 +100,7 @@ makeExperimentHubMetadata <- function(pathToPackage, fileName=character())
                                        DataProvider=DataProvider,
                                        Maintainer=Maintainer,
                                        RDataClass=RDataClass, Tags=.tags[[x]],
+                                       Licenses=.licenses[[x]],
                                        RDataDateAdded=RDataDateAdded,
                                        RDataPath=.RDataPaths[[x]],
                                        DispatchClass=DispatchClass,
@@ -118,6 +128,7 @@ ExperimentHubMetadata <-
         TaxonomyId=NA_integer_,
         Genome=NA_character_,
         Tags=NA_character_,
+        Licenses=NA_character_,
         RDataClass=NA_character_,
         RDataDateAdded=as.POSIXct(NA_character_),
         RDataPath=NA_character_,
@@ -161,6 +172,7 @@ ExperimentHubMetadata <-
     AnnotationHubData:::.checkFileLengths(RDataPath, DispatchClass)
     AnnotationHubData:::.checkValidSingleString(Title)
     AnnotationHubData:::.checkValidSingleString(Description)
+    AnnotationHubData:::.checkThatSingleStringOrNA(Licenses)
 
     new("ExperimentHubMetadata",
         ExperimentHubRoot=ExperimentHubRoot,
@@ -180,6 +192,7 @@ ExperimentHubMetadata <-
         SourceType=SourceType,
         Species=Species,
         Tags=Tags,
+        Licenses=Licenses,
         TaxonomyId=TaxonomyId,
         Title=Title,
         Location_Prefix=Location_Prefix,
@@ -215,7 +228,8 @@ setMethod("show", "ExperimentHubMetadata",
                   "Species", "TaxonomyId", "Location_Prefix",
                   "RDataClass", "RDataDateAdded",
                   "RDataPath", "SourceLastModifiedDate", "SourceType",
-                  "SourceUrl", "SourceVersion", "Tags", "DispatchClass")) {
+                  "SourceUrl", "SourceVersion", "Tags", "Licenses",
+                  "DispatchClass")) {
         value <- slot(object, slt)
         txt <- paste0(slt, ": ", paste0(as.character(value), collapse=" "))
         cat(strwrap(txt), sep="\n  ")

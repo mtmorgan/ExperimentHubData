@@ -37,6 +37,7 @@ ExperimentHubMetadata(ExperimentHubRoot=NA_character_,
 	TaxonomyId=NA_integer_,
 	Genome=NA_character_,
 	Tags=NA_character_,
+        Licenses=NA_character_,
 	RDataClass=NA_character_,
 	RDataDateAdded=as.POSIXct(NA_character_),
 	RDataPath=NA_character_,
@@ -123,6 +124,9 @@ ExperimentHubMetadata(ExperimentHubRoot=NA_character_,
       entered in the database and are not part of the formal metadata. This
       'controlled vocabulary' approach was taken to limit the search terms to a
       well defined set and may change in the future.
+    }
+    \item{Licenses}{
+      \code{character()} Licenses that the data is built under.
     }
     \item{RDataClass}{
       \code{character(1)} Class of derived object (e.g. \sQuote{GRanges}).

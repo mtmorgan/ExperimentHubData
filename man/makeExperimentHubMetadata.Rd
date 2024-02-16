@@ -160,6 +160,16 @@
 	     Tags=c("tag1:tag2:tag3", "tag1:tag3")
 	     }
 
+       \item Licenses: \code{character() vector}.
+             \sQuote{Licenses} are list of licenses that the data can be
+             distributed under. When accessing a resource with a license listed
+             the user will be prompted to approve the license(s).
+             \sQuote{Licenses} are specified as a colon separated string, e.g.,
+             tags for two resources could look like this:
+
+             \preformatted{
+             Licenses=c("GPL-2", "GPL-2:LGPL-2")
+             }
 
       }
       NOTE: The metadata file can have additional columns beyond the 'Required
